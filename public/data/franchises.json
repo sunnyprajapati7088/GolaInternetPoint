@@ -1,0 +1,5 @@
+[
+  { "id": "F001", "name": "City Center, Delhi", "owner": "Ramesh Kumar", "students": 120 },
+  { "id": "F002", "name": "Tech Park, Bangalore", "owner": "Sunita Rao", "students": 85 },
+  { "id": "F003", "name": "Info Hub, Pune", "owner": "Anil Mehta", "students": 95 }
+]

@@ -1,0 +1,6 @@
+[
+  { "id": 1, "title": "Advanced Web Development", "duration": "6 Months", "fee": "15000" },
+  { "id": 2, "title": "Data Science with Python", "duration": "8 Months", "fee": "25000" },
+  { "id": 3, "title": "Digital Marketing Fundamentals", "duration": "3 Months", "fee": "10000" },
+  { "id": 4, "title": "UI/UX Design Essentials", "duration": "4 Months", "fee": "12000" }
+]

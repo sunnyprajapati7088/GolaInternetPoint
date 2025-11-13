@@ -1,0 +1,20 @@
+[
+  { 
+    "id": "S1001", 
+    "name": "Amit Sharma", 
+    "course": "Advanced Web Development", 
+    "franchise": "City Center, Delhi" 
+  },
+  { 
+    "id": "S1002", 
+    "name": "Priya Singh", 
+    "course": "Data Science with Python", 
+    "franchise": "Tech Park, Bangalore" 
+  },
+  { 
+    "id": "S1003", 
+    "name": "Karan Verma", 
+    "course": "Digital Marketing Fundamentals", 
+    "franchise": "City Center, Delhi" 
+  }
+]

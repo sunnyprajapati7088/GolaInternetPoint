@@ -1,0 +1,100 @@
+import React from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
+import { useAuth } from './contexts/AuthContext';
+
+// Layouts & Nav
+import Navbar from './components/Navbar';
+import DashboardLayout from './components/DashboardLayout';
+import ProtectedRoute from './components/ProtectedRoute';
+
+import HomePage from './pages/public/HomePage';
+import LoginPage from './pages/public/LoginPage';
+import CoursesPage from './pages/public/CoursesPage';
+import VerifyPage from './pages/public/VerifyPage';
+import NotFoundPage from './pages/public/NotFoundPage';
+
+// Admin Pages
+import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminManageCourses from './pages/admin/AdminManageCourses';
+import AdminManageFranchise from './pages/admin/AdminManageFranchise';
+import AdminCertificates from './pages/admin/AdminCertificates';
+
+// Franchise Pages
+import FranchiseDashboard from './pages/franchise/FranchiseDashboard';
+import FranchiseAddStudent from './pages/franchise/FranchiseAddStudent';
+import FranchiseIssueCertificate from './pages/franchise/FranchiseIssueCertificate';
+
+// Student Pages
+import StudentDashboard from './pages/student/StudentDashboard';
+import StudentMyCourses from './pages/student/StudentMyCourses';
+import StudentMyCertificates from './pages/student/StudentMyCertificates';
+import StudentMyIDCard from './pages/student/StudentMyIDCard';
+
+// Stubs
+import PageStub from './components/PageStub';
+
+
+// We need a wrapper to provide navigate to the Navbar
+const AppRouter = () => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  return (
+    <>
+      <Navbar 
+        user={user} 
+        onLogout={() => {
+          logout();
+          navigate('/');
+        }} 
+        onToggleMobileMenu={() => {}} // Add your toggle logic
+      />
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/courses" element={<CoursesPage />} />
+        <Route path="/verify" element={<VerifyPage />} />
+
+        {/* Admin Routes */}
+        <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
+          <Route path="/admin" element={<DashboardLayout />}>
+            <Route path="dashboard" element={<AdminDashboard />} />
+            <Route path="courses" element={<AdminManageCourses />} />
+            <Route path="franchises" element={<AdminManageFranchise />} />
+            <Route path="students" element={<PageStub title="Manage Students" />} />
+            <Route path="certificates" element={<AdminCertificates />} />
+            <Route path="reports" element={<PageStub title="View Reports" />} />
+          </Route>
+        </Route>
+        
+        {/* Franchise Routes */}
+        <Route element={<ProtectedRoute allowedRoles={['franchise']} />}>
+          <Route path="/franchise" element={<DashboardLayout />}>
+            <Route path="dashboard" element={<FranchiseDashboard />} />
+            <Route path="add-student" element={<FranchiseAddStudent />} />
+            <Route path="manage-students" element={<PageStub title="Manage My Students" />} />
+            <Route path="issue-certificate" element={<FranchiseIssueCertificate />} />
+            <Route path="issue-id" element={<PageStub title="Issue ID Card" />} />
+          </Route>
+        </Route>
+
+        {/* Student Routes */}
+        <Route element={<ProtectedRoute allowedRoles={['student']} />}>
+          <Route path="/student" element={<DashboardLayout />}>
+            <Route path="dashboard" element={<StudentDashboard />} />
+            <Route path="courses" element={<StudentMyCourses />} />
+            <Route path="certificates" element={<StudentMyCertificates />} />
+            <Route path="id-card" element={<StudentMyIDCard />} />
+            <Route path="exam" element={<PageStub title="Online Exam" />} />
+          </Route>
+        </Route>
+
+        {/* Not Found */}
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </>
+  );
+};
+
+export default AppRouter;
