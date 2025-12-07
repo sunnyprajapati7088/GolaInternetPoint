@@ -32,6 +32,7 @@ import StudentMyIDCard from './pages/student/StudentMyIDCard';
 
 // Stubs
 import PageStub from './components/PageStub';
+import ComputerTrainingLandingPage from './pages/LandingPage';
 
 
 // We need a wrapper to provide navigate to the Navbar
@@ -51,7 +52,7 @@ const AppRouter = () => {
       />
       <Routes>
         {/* Public Routes */}
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<ComputerTrainingLandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/courses" element={<CoursesPage />} />
         <Route path="/verify" element={<VerifyPage />} />
