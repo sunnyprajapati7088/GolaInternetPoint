@@ -2,20 +2,20 @@ import React, { useState ,useEffect} from 'react';
 import { FaWhatsapp, FaFacebook, FaTwitter, FaLinkedin } from 'react-icons/fa';
 import { IoMenu, IoClose } from 'react-icons/io5';
 import useScreenWidth from '../components/useScreenWidth';
-import Topper1 from '../../public/assets/Toper1.jpg';
-import Topper2 from '../../public/assets/Toper2.jpg';
-import Topper3 from '../../public/assets/Toper3.jpg';
-import Topper4 from '../../public/assets/Toper4.jpg';
-import Topper5 from '../../public/assets/Toper5.jpg';
-import Topper6 from '../../public/assets/Toper6.jpg';
-import Topper7 from '../../public/assets/Toper7.jpg';
-import Topper8 from '../../public/assets/Toper8.jpg';
-import Topper9 from '../../public/assets/Toper9.jpg';
-import Topper10 from '../../public/assets/Toper10.jpg';
-import Topper11 from '../../public/assets/Toper11.jpg';
-import Tally from '../../public/assets/Tally.jpg'
-import DCA from '../../public/assets/DCA.jpg'
-import TallyPrime from '../../public/assets/TallyPrime.jpg'
+import Topper1 from '../assets/Toper1.jpg';
+import Topper2 from '../assets/Toper2.jpg';
+import Topper3 from '../assets/Toper3.jpg';
+import Topper4 from '../assets/Toper4.jpg';
+import Topper5 from '../assets/Toper5.jpg';
+import Topper6 from '../assets/Toper6.jpg';
+import Topper7 from '../assets/Toper7.jpg';
+import Topper8 from '../assets/Toper8.jpg';
+import Topper9 from '../assets/Toper9.jpg';
+import Topper10 from '../assets/Toper10.jpg';
+import Topper11 from '../assets/Toper11.jpg';
+import Tally from '../assets/Tally.jpg'
+import DCA from '../assets/DCA.jpg'
+import TallyPrime from '../assets/TallyPrime.jpg'
 
 
 // --- MOCK DATA ---
@@ -215,7 +215,7 @@ const courses = [
   }
 ];
 
-import pintu from'../../public/assets/pintu.jpg'
+import pintu from'../assets/pintu.jpg'
 const toppers = [
   { id: 1, name: "Aarav Sharma", course: "Web Development", score: "98%", imageUrl:Topper1 },
   { id: 2, name: "Priya Singh", course: "Data Science", score: "96%" , imageUrl:Topper2 },
