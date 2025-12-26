@@ -18,6 +18,7 @@ import DCA from '../assets/DCA.jpg'
 import TallyPrime from '../assets/TallyPrime.jpg'
 
 
+
 // --- MOCK DATA ---
 const courses = [
   // --- Original Courses ---
@@ -216,6 +217,8 @@ const courses = [
 ];
 
 import pintu from'../assets/pintu.jpg'
+import { Link } from 'react-router-dom';
+
 const toppers = [
   { id: 1, name: "Aarav Sharma", course: "Web Development", score: "98%", imageUrl:Topper1 },
   { id: 2, name: "Priya Singh", course: "Data Science", score: "96%" , imageUrl:Topper2 },
@@ -302,67 +305,68 @@ const Navbar = () => {
 };
 
 
-function DirectorMessage() {
-  return (
-    <section className="py-16 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-6 lg:px-10">
-        
-        <h2 className="text-4xl font-bold text-center text-indigo-700 mb-12">
-          Founder Director's Message
-        </h2>
+  function DirectorMessage() {
+    return (
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-6 lg:px-10">
+          
+          <h2 className="text-4xl font-bold text-center text-indigo-700 mb-12">
+            Founder Director's Message
+          </h2>
 
-        <div className="flex flex-col lg:flex-row items-start gap-10 bg-white p-8 rounded-2xl shadow-xl">
+          <div className="flex flex-col lg:flex-row items-start gap-10 bg-white p-8 rounded-2xl shadow-xl">
 
-          {/* ---- Left: Director Photo ---- */}
-          <div className="w-full lg:w-1/3 flex justify-center">
-            <img 
-              src={pintu} 
-              alt="Founder Director"
-              className="rounded-xl shadow-md w-80 h-[420px] object-cover"
-            />
-          </div>
-
-          {/* ---- Right: Message ---- */}
-          <div className="w-full lg:w-2/3">
-            <p className="text-gray-700 leading-relaxed text-lg mb-4">
-              Firstly, I would like to welcome you to our <strong>Gola Interpoint Institute of Computer Technology</strong>. We at Gola Interpoint Institute of Computer Technology have been equipped with the most advanced and professional courses offered in the field of Information Technology.
-            </p>
-
-            <p className="text-gray-700 leading-relaxed text-lg mb-4">
-              A lot of young students like you have enrolled with Gola Interpoint Institute of Computer Technology and made a bright & successful career in fields like Computer Teaching, Graphic Designing, Web Development, Accounting, Programming, Hardware and Networking.
-            </p>
-
-            <p className="text-gray-700 leading-relaxed text-lg mb-4">
-              I am gratified that you have chosen Gola Interpoint Institute of Computer Technology as your platform for a successful career. The IT industry has been witnessing tremendous growth and is becoming a knowledge-based global superpower.
-            </p>
-
-            <p className="text-gray-700 leading-relaxed text-lg mb-4">
-              The rapid pace of development has created a strong demand for skilled professionals. Our programs are carefully designed to meet the needs of students as well as individuals seeking to upgrade their IT knowledge and skills.
-            </p>
-
-            <p className="text-gray-700 leading-relaxed text-lg mb-4">
-              We have engaged an expert faculty and employ the latest communication and technological tools to deliver high-quality education across all our centers. Our mission is to provide you with the perfect launchpad to reach new heights in your career.
-            </p>
-
-            <p className="text-gray-700 leading-relaxed text-lg mb-6">
-              I encourage you to make the most of this opportunity and build a proud career with Gola Interpoint Institute of Computer Technology. Wishing you all the best for a bright future!
-            </p>
-
-            <div className="mt-6">
-              <h3 className="text-2xl font-bold text-indigo-700">Pintu Prajapati</h3>
-              <p className="text-gray-600 text-lg font-medium">(Founder Director)</p>
-              <p className="text-gray-700 font-semibold">
-                Gola Interpoint Institute of Computer Technology
-              </p>
+            {/* ---- Left: Director Photo ---- */}
+            <div className="w-full lg:w-1/3 flex justify-center">
+              <img 
+                src={pintu} 
+                alt="Founder Director"
+                className="rounded-xl shadow-md w-80 h-[420px] object-cover"
+              />
+              <Link to="/login" className="mt-4 text-indigo-600 hover:text-indigo-800 font-medium text-lg">Login</Link>
             </div>
 
-          </div>
-        </div>
+            {/* ---- Right: Message ---- */}
+            <div className="w-full lg:w-2/3">
+              <p className="text-gray-700 leading-relaxed text-lg mb-4">
+                Firstly, I would like to welcome you to our <strong>Gola Interpoint Institute of Computer Technology</strong>. We at Gola Interpoint Institute of Computer Technology have been equipped with the most advanced and professional courses offered in the field of Information Technology.
+              </p>
 
-      </div>
-    </section>
-  );
-}
+              <p className="text-gray-700 leading-relaxed text-lg mb-4">
+                A lot of young students like you have enrolled with Gola Interpoint Institute of Computer Technology and made a bright & successful career in fields like Computer Teaching, Graphic Designing, Web Development, Accounting, Programming, Hardware and Networking.
+              </p>
+
+              <p className="text-gray-700 leading-relaxed text-lg mb-4">
+                I am gratified that you have chosen Gola Interpoint Institute of Computer Technology as your platform for a successful career. The IT industry has been witnessing tremendous growth and is becoming a knowledge-based global superpower.
+              </p>
+
+              <p className="text-gray-700 leading-relaxed text-lg mb-4">
+                The rapid pace of development has created a strong demand for skilled professionals. Our programs are carefully designed to meet the needs of students as well as individuals seeking to upgrade their IT knowledge and skills.
+              </p>
+
+              <p className="text-gray-700 leading-relaxed text-lg mb-4">
+                We have engaged an expert faculty and employ the latest communication and technological tools to deliver high-quality education across all our centers. Our mission is to provide you with the perfect launchpad to reach new heights in your career.
+              </p>
+
+              <p className="text-gray-700 leading-relaxed text-lg mb-6">
+                I encourage you to make the most of this opportunity and build a proud career with Gola Interpoint Institute of Computer Technology. Wishing you all the best for a bright future!
+              </p>
+
+              <div className="mt-6">
+                <h3 className="text-2xl font-bold text-indigo-700">Pintu Prajapati</h3>
+                <p className="text-gray-600 text-lg font-medium">(Founder Director)</p>
+                <p className="text-gray-700 font-semibold">
+                  Gola Interpoint Institute of Computer Technology
+                </p>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </section>
+    );
+  }
 
 const bannerSlides = [
     { 

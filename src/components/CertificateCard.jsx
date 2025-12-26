@@ -1,42 +1,120 @@
-import React from 'react';
-import QRCodeDisplay from './QRCodeDisplay'; // It needs the QR code!
+import React from "react";
+// import QRCode from "react-qr-code";
+import "./Marksheet.css";
+import Qbarcode from "./qbarcode";
 
-/**
- * Certificate Card Component
- */
-// Note: This is a NAMED export, so you MUST import it with { }
-export const CertificateCard = ({ studentName, courseName, date, id }) => {
-  return (
-    <div className="bg-white rounded-2xl shadow-xl p-8 border-4 border-blue-200 max-w-2xl mx-auto">
-      <div className="text-center mb-8">
-        <h2 className="text-sm font-semibold text-gray-500 tracking-widest uppercase">
-          Certificate of Completion
-        </h2>
-        <h1 className="text-4xl font-bold text-blue-700 mt-2">Gola Internet PointAcademy</h1>
-      </div>
-      <p className="text-lg text-center text-gray-600 mb-6">
-        This certificate is proudly presented to
-      </p>
-      <h3 className="text-5xl font-bold text-center text-gray-900 mb-8">
-        {studentName}
-      </h3>
-      <p className="text-lg text-center text-gray-600 mb-6">
-        for successfully completing the course
-      </p>
-      <h4 className="text-3xl font-semibold text-center text-blue-600 mb-10">
-        {courseName}
-      </h4>
-      <div className="flex justify-between items-end">
-        <div>
-          <p className="text-sm text-gray-500">Date of Issue</p>
-          <p className="text-lg font-medium text-gray-800">{date}</p>
-          <p className="text-sm text-gray-500 mt-4">Certificate ID</p>
-          <p className="text-lg font-mono text-gray-800">{id}</p>
-        </div>
-        <QRCodeDisplay value={`https://Gola Internet Point.com/verify/certificate/${id}`} />
-      </div>
-    </div>
-  );
+const marksheetData = {
+  institute: "Gola Cafe & Study Point",
+  course: "Advance Diploma in Computer Application",
+  student: {
+    name: "MOHIT KUMAR",
+    regNo: "AICT1440519",
+    fatherName: "JAHENDRA SINGH",
+    dob: "01-Jun-2000",
+    duration: "12 Months",
+    session: "NOV-2024 TO OCT-2025",
+  },
+  subjects: [
+    { code: "ADCA101", name: "Fundamental & Basic Computer", max: 100, marks: 90 },
+    { code: "ADCA102", name: "Windows Operating System", max: 100, marks: 90 },
+    { code: "ADCA103", name: "Microsoft Office", max: 100, marks: 88 },
+    { code: "ADCA104", name: "Adobe Photoshop", max: 100, marks: 89 },
+    { code: "ADCA105", name: "Page Maker & Corel Draw", max: 100, marks: 84 },
+    { code: "ADCA106", name: "Internet & Email", max: 100, marks: 92 },
+    { code: "ADCA107", name: "Tally Prime", max: 100, marks: 81 },
+    { code: "ADCA108", name: "Project", max: 100, marks: 89 },
+  ],
 };
 
-// This file does NOT have a default export, on purpose.
+function CertificateCard() {
+  const total = marksheetData.subjects.reduce((a, b) => a + b.marks, 0);
+
+  return (
+    <div  className="marksheet-container">
+      {/* <div>
+        <button  onClick={()=>window.print()}>
+          print
+        </button>
+      </div> */}
+      <div className="marksheet">
+
+      {/* HEADER */}
+      <div className="header">
+        <img src="/img/logo.jpeg" alt="logo" className="logo" />
+
+        <div className="qr-boxdata">
+          <div className="qr-reg">
+            Regis No:<span>{marksheetData.student.regNo}</span>
+          </div>
+          <Qbarcode />
+        </div>
+      </div>
+
+      {/* CENTER AUTHORITY */}
+      <div className="center-authority">
+        <h2>Gola Internate</h2>
+        <p className="sub-title">Authorized Study Center</p>
+        <h3>GICT</h3>
+        <h4>EDUCATION AND SKILL DEVELOPMENT FOUNDATION</h4>
+        <p>Ministry of Corporate Affairs Govt. of India</p>
+        <p>NITI Aayog & MSME – Govt. of India</p>
+        <p className="reg">ISO 9001:2015 & 14001:2015 Certified</p>
+        <p className="address">
+          Janakpuri, Near HDFC Bank, New Delhi – 110027
+        </p>
+      </div>
+
+      {/* RIBBON */}
+      <div className="ribbon">MARKSHEET</div>
+
+      <h4 className="course-title">
+        ADVANCE DIPLOMA IN COMPUTER APPLICATION
+      </h4>
+
+      {/* STUDENT INFO */}
+      <div className="student-info">
+        <p><b>Name:</b> {marksheetData.student.name}</p>
+        <p><b>Registration No:</b> {marksheetData.student.regNo}</p>
+        <p><b>Father Name:</b> {marksheetData.student.fatherName}</p>
+        <p><b>DOB:</b> {marksheetData.student.dob}</p>
+        <p><b>Duration:</b> {marksheetData.student.duration}</p>
+        <p><b>Session:</b> {marksheetData.student.session}</p>
+      </div>
+
+      {/* TABLE */}
+      <table>
+        <thead>
+          <tr>
+            <th style={{ width: "40px" }}>S.No.</th>
+            <th>Subject</th>
+            <th>Paper Code</th>
+            <th>Max</th>
+            <th>Marks</th>
+          </tr>
+        </thead>
+        <tbody>
+          {marksheetData.subjects.map((s, i) => (
+            <tr key={i}>
+              <td>{i + 1}</td>
+              <td>{s.name}</td>
+              <td>{s.code}</td>
+              <td>{s.max}</td>
+              <td>{s.marks}</td>
+            </tr>
+          ))}
+          {/* Total Row */}
+          <tr style={{ backgroundColor: "#f2f2f2", fontWeight: "bold" }}>
+            <td colSpan="3" style={{ textAlign: "right" }}>Total</td>
+            <td>800</td>
+            <td>{total}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div className="footer">Director</div>
+    </div>
+    </div>
+  );
+}
+
+export default CertificateCard;

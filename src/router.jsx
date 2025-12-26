@@ -33,6 +33,7 @@ import StudentMyIDCard from './pages/student/StudentMyIDCard';
 // Stubs
 import PageStub from './components/PageStub';
 import ComputerTrainingLandingPage from './pages/LandingPage';
+import Header from './pages/LandingPageComponentes/LandingComponent';
 
 
 // We need a wrapper to provide navigate to the Navbar
@@ -42,20 +43,21 @@ const AppRouter = () => {
 
   return (
     <>
-      <Navbar 
+ {/*      <Navbar 
         user={user} 
         onLogout={() => {
           logout();
           navigate('/');
         }} 
         onToggleMobileMenu={() => {}} // Add your toggle logic
-      />
+      /> */}
       <Routes>
         {/* Public Routes */}
-        <Route path="/" element={<ComputerTrainingLandingPage />} />
+        <Route path="/" element={<Header />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/courses" element={<CoursesPage />} />
         <Route path="/verify" element={<VerifyPage />} />
+            <Route path="certificates" element={<StudentMyCertificates />} />
 
         {/* Admin Routes */}
         <Route element={<ProtectedRoute allowedRoles={['admin']} />}>

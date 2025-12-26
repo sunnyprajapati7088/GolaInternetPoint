@@ -26,7 +26,7 @@ const Sidebar = ({ role, route, onClose }) => {
   const STUDENT_LINKS = [
     { name: 'Dashboard', icon: 'dashboard', path: '/student/dashboard' },
     { name: 'My Courses', icon: 'book', path: '/student/courses' },
-    { name: 'My Certificates', icon: 'award', path: '/student/certificates' },
+    { name: 'My Certificates', icon: 'award', path:'/certificates' },
     { name: 'My ID Card', icon: 'idCard', path: '/student/id-card' },
     { name: 'Online Exam', icon: 'fileText', path: '/student/exam' },
   ];

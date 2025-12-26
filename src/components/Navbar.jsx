@@ -4,7 +4,7 @@ import { FaWhatsapp, FaFacebook, FaTwitter, FaLinkedin } from 'react-icons/fa';
 import { IoMenu, IoClose } from 'react-icons/io5';
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const navLinks = ['Home', 'Courses', 'Apply', 'Toppers', 'Contact'];
+  const navLinks = ['Home', 'Courses', 'Apply', 'Toppers', 'Contact',];
 
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50">
