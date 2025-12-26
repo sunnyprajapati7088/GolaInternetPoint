@@ -1,7 +1,7 @@
 import React from "react";
 // import QRCode from "react-qr-code";
 import "./Marksheet.css";
-import Qbarcode from "./qbarcode";
+import Qbarcode from "./Qbarcode";
 
 const marksheetData = {
   institute: "Gola Cafe & Study Point",
