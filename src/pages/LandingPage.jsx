@@ -216,7 +216,7 @@ const courses = [
   }
 ];
 
-import pintu from'../assets/pintu.jpg'
+
 import { Link } from 'react-router-dom';
 
 const toppers = [
@@ -319,7 +319,7 @@ const Navbar = () => {
             {/* ---- Left: Director Photo ---- */}
             <div className="w-full lg:w-1/3 flex justify-center">
               <img 
-                src={pintu} 
+                src="" 
                 alt="Founder Director"
                 className="rounded-xl shadow-md w-80 h-[420px] object-cover"
               />
