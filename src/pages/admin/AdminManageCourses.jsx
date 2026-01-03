@@ -70,6 +70,9 @@ const AdminManageCourses = () => {
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
+  const [activeTab, setActiveTab] = useState("programs");
+  const [dashboardProgramFilter, setDashboardProgramFilter] = useState("");
+  const [dashboardCourseFilter, setDashboardCourseFilter] = useState("");
 
   /* ================= HELPERS ================= */
   const getHeaders = () => {
@@ -423,37 +426,57 @@ const AdminManageCourses = () => {
           </div>
         )}
 
+        {/* Tabbar */}
+        <div className="bg-white rounded-xl p-3 shadow-sm">
+          <div className="flex items-center gap-2">
+            <button onClick={() => setActiveTab('programs')} className={`px-4 py-2 rounded ${activeTab === 'programs' ? 'bg-blue-600 text-white' : 'text-gray-700 hover:bg-gray-100'}`}>Programs</button>
+            <button onClick={() => setActiveTab('courses')} className={`px-4 py-2 rounded ${activeTab === 'courses' ? 'bg-blue-600 text-white' : 'text-gray-700 hover:bg-gray-100'}`}>Courses</button>
+            <button onClick={() => setActiveTab('subjects')} className={`px-4 py-2 rounded ${activeTab === 'subjects' ? 'bg-blue-600 text-white' : 'text-gray-700 hover:bg-gray-100'}`}>Subjects</button>
+            <button onClick={() => setActiveTab('dashboard')} className={`px-4 py-2 rounded ml-auto ${activeTab === 'dashboard' ? 'bg-blue-600 text-white' : 'text-gray-700 hover:bg-gray-100'}`}>View Dashboard</button>
+          </div>
+        </div>
+
         {/* PROGRAMS SECTION */}
-        <Section title="📚 Programs" subtitle="Create and manage academic programs" icon="🎓">
+        {activeTab === 'programs' && (
+          <Section title="📚 Programs" subtitle="Create and manage academic programs" icon="🎓">
           <Grid>
             <Input value={programName} onChange={setProgramName} placeholder="Program Name *" />
             <Input value={programImage} onChange={setProgramImage} placeholder="Image URL (optional)" />
           </Grid>
           <ActionButton onClick={handleCreateProgram} loading={loading} label="+ Create Program" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {programs.length === 0 ? (
-              <div className="col-span-full text-center py-8 text-gray-500">No programs yet</div>
-            ) : (
-              programs.map((p) => (
-                <div key={p._id} className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="font-semibold text-gray-900">{p.name}</div>
-                      <div className="text-xs text-gray-500 mt-1 truncate">{p._id}</div>
-                    </div>
-                    <div className="flex items-center gap-2 flex-shrink-0 ml-2">
-                      <button className="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition" onClick={() => handleEditProgram(p)}>Edit</button>
-                      <button className="px-2 py-1 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200 transition" onClick={() => handleDeleteProgram(p._id)}>Delete</button>
-                    </div>
-                  </div>
-                </div>
-              ))
-            )}
+          <div className="overflow-x-auto bg-white border border-gray-200 rounded-lg">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">Program</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">ID</th>
+                  <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {programs.length === 0 ? (
+                  <tr><td colSpan="3" className="px-6 py-8 text-center text-gray-500">No programs yet</td></tr>
+                ) : (
+                  programs.map((p) => (
+                    <tr key={p._id} className="hover:bg-gray-50">
+                      <td className="px-4 py-3 text-sm text-gray-900">{p.name}</td>
+                      <td className="px-4 py-3 text-sm text-gray-600 font-mono">{p._id}</td>
+                      <td className="px-4 py-3 text-right text-sm space-x-2">
+                        <button className="px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200" onClick={() => handleEditProgram(p)}>Edit</button>
+                        <button className="px-3 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200" onClick={() => handleDeleteProgram(p._id)}>Delete</button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
           </div>
-        </Section>
+          </Section>
+        )}
 
         {/* COURSES SECTION */}
-        <Section title="📖 Courses" subtitle="Courses under each program" icon="📝">
+        {activeTab === 'courses' && (
+          <Section title="📖 Courses" subtitle="Courses under each program" icon="📝">
           <Grid>
             <Select value={selectedProgramForCourse} onChange={setSelectedProgramForCourse} options={programs} />
             <Input value={courseCode} onChange={setCourseCode} placeholder="Course Code *" />
@@ -463,32 +486,47 @@ const AdminManageCourses = () => {
             <Input value={duration} onChange={setDuration} placeholder="Duration (e.g. 6 months)" />
           </Grid>
           <ActionButton onClick={handleCreateCourse} loading={loading} label="+ Create Course" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {courses.length === 0 ? (
-              <div className="col-span-full text-center py-8 text-gray-500">No courses yet</div>
-            ) : (
-              courses.map((c) => (
-                <div key={c._id} className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="font-semibold text-gray-900">{c.name}</div>
-                      <div className="text-xs text-gray-600 mt-1">Code: {c.code}</div>
-                      <div className="text-xs text-gray-500 mt-1">Program: {c.programId?.name || c.programId}</div>
-                      <div className="text-xs text-gray-500">Fee: ₹{c.fee} | Duration: {c.duration}</div>
-                    </div>
-                    <div className="flex items-center gap-2 flex-shrink-0 ml-2">
-                      <button className="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition" onClick={() => handleEditCourse(c)}>Edit</button>
-                      <button className="px-2 py-1 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200 transition" onClick={() => handleDeleteCourse(c._id)}>Delete</button>
-                    </div>
-                  </div>
-                </div>
-              ))
-            )}
+          <div className="overflow-x-auto bg-white border border-gray-200 rounded-lg">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">Course</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">Code</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">Program</th>
+                  <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700">Fee</th>
+                  <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700">Admission</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">Duration</th>
+                  <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {courses.length === 0 ? (
+                  <tr><td colSpan="7" className="px-6 py-8 text-center text-gray-500">No courses yet</td></tr>
+                ) : (
+                  courses.map((c) => (
+                    <tr key={c._id} className="hover:bg-gray-50">
+                      <td className="px-4 py-3 text-sm text-gray-900">{c.name}</td>
+                      <td className="px-4 py-3 text-sm text-gray-600">{c.code}</td>
+                      <td className="px-4 py-3 text-sm text-gray-700">{c.programId?.name || c.programId}</td>
+                      <td className="px-4 py-3 text-sm text-right text-gray-700">₹{c.fee}</td>
+                      <td className="px-4 py-3 text-sm text-right text-gray-700">₹{c.admissionFee}</td>
+                      <td className="px-4 py-3 text-sm text-gray-700">{c.duration}</td>
+                      <td className="px-4 py-3 text-right text-sm space-x-2">
+                        <button className="px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200" onClick={() => handleEditCourse(c)}>Edit</button>
+                        <button className="px-3 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200" onClick={() => handleDeleteCourse(c._id)}>Delete</button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
           </div>
-        </Section>
+          </Section>
+        )}
 
         {/* SUBJECTS SECTION */}
-        <Section title="✏️ Subjects" subtitle="Subjects mapped to courses" icon="📖">
+        {activeTab === 'subjects' && (
+          <Section title="✏️ Subjects" subtitle="Subjects mapped to courses" icon="📖">
           <Grid>
             <Select value={selectedProgramForSubject} onChange={setSelectedProgramForSubject} options={programs} />
             <Select value={selectedCourse} onChange={setSelectedCourse} options={coursesForSubject} disabled={!selectedProgramForSubject} />
@@ -496,100 +534,138 @@ const AdminManageCourses = () => {
             <Input value={subjectMarks} onChange={setSubjectMarks} placeholder="Marks" />
           </Grid>
           <ActionButton onClick={handleCreateSubject} loading={loading} label="+ Create Subject" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {subjects.length === 0 ? (
-              <div className="col-span-full text-center py-8 text-gray-500">No subjects yet</div>
-            ) : (
-              subjects.map((s) => (
-                <div key={s._id} className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="font-semibold text-gray-900">{s.name}</div>
-                      <div className="text-xs text-gray-600 mt-1">Course: {s.courseId?.name || s.courseId}</div>
-                      <div className="text-xs text-gray-500 mt-1">Marks: {s.marks}</div>
-                    </div>
-                    <div className="flex items-center gap-2 flex-shrink-0 ml-2">
-                      <button className="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition" onClick={() => handleEditSubject(s)}>Edit</button>
-                      <button className="px-2 py-1 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200 transition" onClick={() => handleDeleteSubject(s._id)}>Delete</button>
-                    </div>
-                  </div>
-                </div>
-              ))
-            )}
+          <div className="overflow-x-auto bg-white border border-gray-200 rounded-lg">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">Subject</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">Course</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">Program</th>
+                  <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700">Marks</th>
+                  <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {subjects.length === 0 ? (
+                  <tr><td colSpan="5" className="px-6 py-8 text-center text-gray-500">No subjects yet</td></tr>
+                ) : (
+                  subjects.map((s) => (
+                    <tr key={s._id} className="hover:bg-gray-50">
+                      <td className="px-4 py-3 text-sm text-gray-900">{s.name}</td>
+                      <td className="px-4 py-3 text-sm text-gray-700">{s.courseId?.name || s.courseId}</td>
+                      <td className="px-4 py-3 text-sm text-gray-700">{s.programId?.name || s.programId}</td>
+                      <td className="px-4 py-3 text-sm text-right text-gray-700">{s.marks}</td>
+                      <td className="px-4 py-3 text-right text-sm space-x-2">
+                        <button className="px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200" onClick={() => handleEditSubject(s)}>Edit</button>
+                        <button className="px-3 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200" onClick={() => handleDeleteSubject(s._id)}>Delete</button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
           </div>
-        </Section>
+          </Section>
+        )}
 
         {/* VIEW DASHBOARD */}
-      <Section title="🔎 View Dashboard" subtitle="Browse programs, their courses and subjects">
-        <div className="space-y-3">
-          {programs.map((p) => (
-            <div key={p._id} className="border rounded p-3 bg-gray-50">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-semibold">{p.name}</div>
-                  <div className="text-xs text-gray-500">{p._id}</div>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <button
-                    className="text-sm text-blue-600"
-                    onClick={() => setExpandedProgram(expandedProgram === p._id ? null : p._id)}
-                  >
-                    {expandedProgram === p._id ? "Collapse" : "Expand"}
-                  </button>
-                  <button className="text-sm text-blue-600" onClick={() => handleEditProgram(p)}>Edit</button>
-                  <button className="text-sm text-red-600" onClick={() => handleDeleteProgram(p._id)}>Delete</button>
-                </div>
+      {activeTab === 'dashboard' && (
+        <Section title="🔎 View Dashboard" subtitle="Browse programs, their courses and subjects">
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Program</label>
+                <Select value={dashboardProgramFilter} onChange={(v) => { setDashboardProgramFilter(v); setDashboardCourseFilter(""); }} options={programs} />
               </div>
-
-              {expandedProgram === p._id && (
-                <div className="mt-3 space-y-2">
-                  {getCoursesForProgram(p._id).map((c) => (
-                    <div key={c._id} className="border rounded p-2 bg-white">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="font-medium">{c.name} <span className="text-xs text-gray-400">({c.code})</span></div>
-                          <div className="text-xs text-gray-500">Fee: {c.fee} | Duration: {c.duration}</div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <button
-                            className="text-sm text-blue-600"
-                            onClick={() => setExpandedCourse(expandedCourse === c._id ? null : c._id)}
-                          >
-                            {expandedCourse === c._id ? "Hide Subjects" : "Show Subjects"}
-                          </button>
-                          <button className="text-sm text-blue-600" onClick={() => handleEditCourse(c)}>Edit</button>
-                          <button className="text-sm text-red-600" onClick={() => handleDeleteCourse(c._id)}>Delete</button>
-                        </div>
-                      </div>
-
-                      {expandedCourse === c._id && (
-                        <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
-                          {getSubjectsForCourse(c._id).length === 0 ? (
-                            <div className="text-sm text-gray-500">No subjects for this course</div>
-                          ) : (
-                            getSubjectsForCourse(c._id).map((s) => (
-                              <div key={s._id} className="bg-gray-50 border rounded px-3 py-2 text-sm flex items-center justify-between">
-                                <div>
-                                  <div className="font-medium">{s.name}</div>
-                                  <div className="text-xs text-gray-500">Marks: {s.marks}</div>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  <button className="text-sm text-blue-600" onClick={() => handleEditSubject(s)}>Edit</button>
-                                  <button className="text-sm text-red-600" onClick={() => handleDeleteSubject(s._id)}>Delete</button>
-                                </div>
-                              </div>
-                            ))
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Course</label>
+                <Select
+                  value={dashboardCourseFilter}
+                  onChange={setDashboardCourseFilter}
+                  options={dashboardProgramFilter ? courses.filter((c) => c.programId?._id === dashboardProgramFilter) : courses}
+                />
+              </div>
             </div>
-          ))}
-        </div>
-      </Section>
+
+            <div className="overflow-x-auto bg-white border border-gray-200 rounded-lg">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">Program</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">Course</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">Subject</th>
+                    <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700">Marks</th>
+                    <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {(() => {
+                    const rows = [];
+                    const filteredPrograms = programs.filter((p) => !dashboardProgramFilter || p._id === dashboardProgramFilter);
+                    if (filteredPrograms.length === 0) {
+                      return <tr><td colSpan="5" className="px-6 py-8 text-center text-gray-500">No results</td></tr>;
+                    }
+                    filteredPrograms.forEach((p) => {
+                      const programCourses = dashboardCourseFilter
+                        ? courses.filter((c) => c._id === dashboardCourseFilter && (c.programId?._id === p._id || c.programId === p._id))
+                        : getCoursesForProgram(p._id);
+
+                      if (programCourses.length === 0) {
+                        rows.push(
+                          <tr key={`p-${p._id}`} className="hover:bg-gray-50">
+                            <td className="px-4 py-3 text-sm text-gray-900">{p.name}</td>
+                            <td className="px-4 py-3 text-sm text-gray-600">-</td>
+                            <td className="px-4 py-3 text-sm text-gray-600">-</td>
+                            <td className="px-4 py-3 text-sm text-right text-gray-700">-</td>
+                            <td className="px-4 py-3 text-right text-sm">
+                              <button className="px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 mr-2" onClick={() => handleEditProgram(p)}>Edit</button>
+                              <button className="px-3 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200" onClick={() => handleDeleteProgram(p._id)}>Delete</button>
+                            </td>
+                          </tr>
+                        );
+                      } else {
+                        programCourses.forEach((c) => {
+                          const subjectsForCourse = getSubjectsForCourse(c._id);
+                          if (subjectsForCourse.length === 0) {
+                            rows.push(
+                              <tr key={`c-${c._id}`} className="hover:bg-gray-50">
+                                <td className="px-4 py-3 text-sm text-gray-900">{p.name}</td>
+                                <td className="px-4 py-3 text-sm text-gray-700">{c.name}</td>
+                                <td className="px-4 py-3 text-sm text-gray-600">-</td>
+                                <td className="px-4 py-3 text-sm text-right text-gray-700">-</td>
+                                <td className="px-4 py-3 text-right text-sm">
+                                  <button className="px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 mr-2" onClick={() => handleEditCourse(c)}>Edit</button>
+                                  <button className="px-3 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200" onClick={() => handleDeleteCourse(c._id)}>Delete</button>
+                                </td>
+                              </tr>
+                            );
+                          } else {
+                            subjectsForCourse.forEach((s) => {
+                              rows.push(
+                                <tr key={`s-${s._id}`} className="hover:bg-gray-50">
+                                  <td className="px-4 py-3 text-sm text-gray-900">{p.name}</td>
+                                  <td className="px-4 py-3 text-sm text-gray-700">{c.name}</td>
+                                  <td className="px-4 py-3 text-sm text-gray-700">{s.name}</td>
+                                  <td className="px-4 py-3 text-sm text-right text-gray-700">{s.marks}</td>
+                                  <td className="px-4 py-3 text-right text-sm">
+                                    <button className="px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 mr-2" onClick={() => handleEditSubject(s)}>Edit</button>
+                                    <button className="px-3 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200" onClick={() => handleDeleteSubject(s._id)}>Delete</button>
+                                  </td>
+                                </tr>
+                              );
+                            });
+                          }
+                        });
+                      }
+                    });
+                    return rows;
+                  })()}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </Section>
+      )}
       {/* EDIT MODALS */}
       {showEditProgramModal && (
         <div className="fixed inset-0 flex items-center justify-center p-4 z-50">
