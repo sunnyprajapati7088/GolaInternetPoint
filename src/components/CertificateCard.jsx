@@ -4,7 +4,7 @@ import "./Marksheet.css";
 import Qbarcode from "./Qbarcode";
 
 const marksheetData = {
-  institute: "Gola Cafe & Study Point",
+  institute: "  Gola Computer Education Skills Development Foundation ",
   course: "Advance Diploma in Computer Application",
   student: {
     name: "MOHIT KUMAR",
@@ -40,7 +40,7 @@ function CertificateCard() {
 
       {/* HEADER */}
       <div className="header">
-        <img src="/img/logo.jpeg" alt="logo" className="logo" />
+        <img src="/logoInternetPoint.png" alt="logo" className="logo" />
 
         <div className="qr-boxdata">
           <div className="qr-reg">
@@ -52,15 +52,13 @@ function CertificateCard() {
 
       {/* CENTER AUTHORITY */}
       <div className="center-authority">
-        <h2>Gola Internate</h2>
-        <p className="sub-title">Authorized Study Center</p>
-        <h3>GICT</h3>
+        <h3>GCE &amp; SDF</h3>
         <h4>EDUCATION AND SKILL DEVELOPMENT FOUNDATION</h4>
         <p>Ministry of Corporate Affairs Govt. of India</p>
         <p>NITI Aayog & MSME – Govt. of India</p>
         <p className="reg">ISO 9001:2015 & 14001:2015 Certified</p>
         <p className="address">
-          Janakpuri, Near HDFC Bank, New Delhi – 110027
+          R.S.P. Inter College Road, Seohara (Bijnor)-246746 U.P India
         </p>
       </div>
 

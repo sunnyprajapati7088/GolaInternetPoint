@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { apiGetCourses, apiGetStudents, apiGetFranchises, apiAddStudent } from '../api';
+import { apiGetCourses, apiGetStudents, apiGetFranchises, apiAddStudent, apiUpdateStudent, apiDeleteStudent } from '../api';
 
 const DataContext = createContext(null);
 
@@ -51,13 +51,40 @@ export const DataProvider = ({ children }) => {
     }
   };
 
+	// Update an existing student: call API and replace in local state
+	const updateStudent = async (id, updatePayload) => {
+		try {
+			const res = await apiUpdateStudent(id, updatePayload);
+			const updated = res.data;
+			setStudents(prev => prev.map(s => (s.id === id ? { ...s, ...updated } : s)));
+			return updated;
+		} catch (err) {
+			console.error('Failed to update student', err);
+			throw err;
+		}
+	};
+
+	// Delete a student: call API and remove from local state
+	const deleteStudent = async (id) => {
+		try {
+			await apiDeleteStudent(id);
+			setStudents(prev => prev.filter(s => s.id !== id));
+			return { id };
+		} catch (err) {
+			console.error('Failed to delete student', err);
+			throw err;
+		}
+	};
+
   const value = {
     courses,
     students,
     franchises,
     loading,
     addStudent,
-    // ...addCourse, addFranchise functions would go here
+		updateStudent,
+		deleteStudent,
+		// ...addCourse, addFranchise functions would go here
   };
 
   return (

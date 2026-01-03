@@ -34,6 +34,9 @@ import StudentMyIDCard from './pages/student/StudentMyIDCard';
 import PageStub from './components/PageStub';
 import ComputerTrainingLandingPage from './pages/LandingPage';
 import Header from './pages/LandingPageComponentes/LandingComponent';
+import CreateUser from './components/RegisterStudent';
+import AdminManageStudents from './pages/admin/AdminManageStudents';
+import ScanId from './components/scanId';
 
 
 // We need a wrapper to provide navigate to the Navbar
@@ -55,6 +58,7 @@ const AppRouter = () => {
         {/* Public Routes */}
         <Route path="/" element={<Header />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/scanid/:userIdToFetch" element={<ScanId />} />
         <Route path="/courses" element={<CoursesPage />} />
         <Route path="/verify" element={<VerifyPage />} />
             <Route path="certificates" element={<StudentMyCertificates />} />
@@ -65,10 +69,12 @@ const AppRouter = () => {
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="courses" element={<AdminManageCourses />} />
             <Route path="franchises" element={<AdminManageFranchise />} />
-            <Route path="students" element={<PageStub title="Manage Students" />} />
+            <Route path="students" element={<AdminManageStudents title="Manage Students" />} />
             <Route path="certificates" element={<AdminCertificates />} />
             <Route path="reports" element={<PageStub title="View Reports" />} />
-          </Route>
+    <Route path="/admin/add-student" element={<CreateUser title="Add Student" />} />
+
+    </Route>
         </Route>
         
         {/* Franchise Routes */}

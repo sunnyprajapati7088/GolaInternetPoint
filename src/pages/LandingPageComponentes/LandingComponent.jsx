@@ -5,33 +5,24 @@ const partnersData = [
   {
     id: 1,
     name: "NIELIT",
-    logo: "/partners/nielit.png",
+    logo: "/nelit.jpg",
   },
   {
     id: 2,
     name: "Digital India",
-    logo: "/partners/digital-india.png",
+    logo: "/digitalIndia.jpg",
   },
   {
     id: 3,
     name: "NSDC",
-    logo: "/partners/nsdc.png",
+    logo: "/nsdc.jpg",
   },
   {
     id: 4,
     name: "ISO 9001",
-    logo: "/partners/iso.png",
+    logo: "/iso.jpg",
   },
-  {
-    id: 5,
-    name: "NIELIT",
-    logo: "/partners/nielit.png",
-  },
-  {
-    id: 6,
-    name: "Digital India",
-    logo: "/partners/digital-india.png",
-  },
+
 ];
 
 const courses = [
@@ -230,6 +221,7 @@ const courses = [
   }
 ];
 import { FaWhatsapp, FaFacebook, FaTwitter, FaLinkedin } from 'react-icons/fa';
+import useScreenWidth from "../../components/useScreenWidth";
 function PartnersCarousel() {
   return (
     <section className="bg-indigo-900 py-12 overflow-hidden">
@@ -586,7 +578,137 @@ const WhatsAppButton = () => (
     </a>
 );
 
+const bannerSlides = [
+    { 
+        title: "Future-Proof Your Career", 
+        subtitle: "Expert-led training in top tech stacks.", 
+        color: "bg-indigo-500",
+        largeImgUrl: "https://res.cloudinary.com/drz6fzlpu/image/upload/v1765092202/a4233470-384e-4fa5-8ef5-4041832f33ac_bkncyg.jpg", 
+        smImgUrl: "https://res.cloudinary.com/drz6fzlpu/image/upload/v1765094319/WhatsApp_Image_2025-11-16_at_6.13.48_AM_qwiwel.jpg"  
+    },
+    { 
+        title: "Learn Data Science & AI", 
+        subtitle: "Transform raw data into business insights.", 
+        color: "bg-teal-500",
+        largeImgUrl: "https://res.cloudinary.com/drz6fzlpu/image/upload/v1765092202/a4233470-384e-4fa5-8ef5-4041832f33ac_bkncyg.jpg",
+        smImgUrl: "https://res.cloudinary.com/drz6fzlpu/image/upload/v1765094319/WhatsApp_Image_2025-11-16_at_6.13.48_AM_qwiwel.jpg"
+    },
+    { 
+        title: "Master Modern Web Development", 
+        subtitle: "Build responsive apps from scratch.", 
+        color: "bg-purple-500",
+        largeImgUrl: "https://res.cloudinary.com/drz6fzlpu/image/upload/v1765092202/a4233470-384e-4fa5-8ef5-4041832f33ac_bkncyg.jpg",
+        smImgUrl: "https://res.cloudinary.com/drz6fzlpu/image/upload/v1765094319/WhatsApp_Image_2025-11-16_at_6.13.48_AM_qwiwel.jpg"
+    },
+];
+const CoursesGrid = () => (
+  <section id="courses" className="py-16">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 className="text-3xl font-bold text-center text-indigo-700 mb-12">Our Available Courses</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {courses.map(course => (
+          // 💡 Added transform and shadow-2xl for animation
+          <div 
+            key={course.id} 
+            className="bg-white rounded-xl shadow-lg transition duration-300 border border-gray-100 
+                       overflow-hidden transform hover:scale-[1.03] hover:shadow-2xl"
+          >
+            {/* 1. COURSE IMAGE (Conditional Rendering) */}
+            {course.courseImg ? (
+              <div className="h-40 w-full overflow-hidden">
+                <img 
+                  src={course.courseImg} 
+                  alt={course.title}
+                  // Using object-cover to make sure the image fills the container area
+                  className="w-full h-full object-fit transition duration-300 group-hover:scale-110" 
+                />
+              </div>
+            ) : (
+              // Fallback to the large emoji icon if no image URL is provided
+              <div className="p-6">
+                <div className="text-4xl mb-4 text-indigo-600">{course.icon}</div>
+              </div>
+            )}
 
+            {/* 2. TEXT CONTENT */}
+            <div className="p-6 pt-3">
+              <h3 className="text-xl font-semibold mb-2 text-gray-800">{course.title}</h3>
+              <p className="text-gray-600 text-sm">{course.description}</p>
+              
+              {/* Call-to-Action Link */}
+              <a 
+                href="#apply" 
+                className="mt-4 inline-block text-indigo-600 hover:text-indigo-800 font-medium text-sm transition duration-150"
+              >
+                View Details &rarr;
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+// 2. Carousel/Banner Section
+const Banner = () => {
+  const slides = bannerSlides;
+  const [current, setCurrent] = useState(0);
+  const isDesktop = useScreenWidth(640); // Check screen size for image switch
+
+  const prevSlide = () => setCurrent((current) => (current === 0 ? slides.length - 1 : current - 1));
+  const nextSlide = () => setCurrent((current) => (current === slides.length - 1 ? 0 : current + 1));
+  
+  // Auto-slide effect (Optional)
+  useEffect(() => {
+    const slideInterval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
+    return () => clearInterval(slideInterval);
+  }, [current]);
+
+  return (
+    <section id="home" className="relative h-96 sm:h-[400px] lg:h-[500px] overflow-hidden">
+      <div 
+        className="flex transition-transform duration-500 ease-in-out h-full"
+        style={{ transform: `translateX(-${current * 100}%)` }}
+      >
+        {slides.map((slide, index) => {
+          // Choose image and size based on screen width
+          const imageUrl = isDesktop ? slide.largeImgUrl : slide.smImgUrl;
+          const bgSize = isDesktop ? 'cover' : 'contain';
+
+          return (
+            <div 
+              key={index}
+              className={`min-w-full flex items-center justify-center text-center p-8 bg-center bg-no-repeat`}
+              // Set responsive background image and size
+              style={{ 
+                backgroundImage: `url(${imageUrl})`, 
+                backgroundSize: 'contain', 
+                backgroundPosition: 'center', 
+                backgroundRepeat: 'no-repeat' 
+              }}
+            >
+              {/* Content Overlay */}
+              
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Navigation Buttons */}
+     
+
+      {/* Indicators */}
+      <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-2 z-10">
+        {slides.map((_, index) => (
+          <div 
+            key={index} 
+            className={`h-2 w-2 rounded-full ${index === current ? 'bg-white' : 'bg-gray-400'}`}
+          />
+        ))}
+      </div>
+    </section>
+  );
+};
 const Header = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -655,6 +777,7 @@ const Header = () => {
           <button className="bg-orange-500 hover:bg-orange-600 text-white text-xs sm:text-sm px-4 py-2 rounded">
             🏢 Franchise Enquiry
           </button>
+          <Link to="/login" className="text-center  bg-orange-500 hover:bg-orange-600 text-white text-xs sm:text-sm px-4 py-2 rounded"> Login </Link>
         </div>
       </header>
 
@@ -710,8 +833,10 @@ const Header = () => {
 </section>
 
           <DirectorMessage/>
+          <Banner />
+          <CoursesGrid />
           <ApplyForm/>
-            <PartnersCarousel />
+        <PartnersCarousel />
            <Footer />
       <WhatsAppButton />
     

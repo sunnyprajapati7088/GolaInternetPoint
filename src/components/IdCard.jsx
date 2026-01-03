@@ -45,7 +45,7 @@ function IdCard() {
 
           <div className="qr-box">
             <QRCode
-              value={`Name: ${idData.student.name}, ID: ${idData.student.studentId}, Course: ${idData.student.course}`}
+              value={`https://localhost:5173/${idData.student.studentId}`}
               size={56}
             />
           </div>

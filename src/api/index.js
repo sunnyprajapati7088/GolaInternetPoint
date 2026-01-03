@@ -77,3 +77,29 @@ export const apiAddStudent = (studentPayload) => {
   // For our demo, return the *new* serverResponse object
   return Promise.resolve({ data: serverResponse });
 };
+
+/**
+ * Simulate updating a student on the server.
+ * Accepts the `id` and an object with updated fields.
+ */
+export const apiUpdateStudent = (id, updatePayload) => {
+  console.log(`API STUB: Update student ${id}`, updatePayload);
+
+  // In a real app this would be: axios.put(`/students/${id}`, updatePayload)
+  const updated = {
+    id,
+    ...updatePayload,
+    serverTimestamp: new Date().toISOString(),
+  };
+
+  return Promise.resolve({ data: updated });
+};
+
+/**
+ * Simulate deleting a student on the server.
+ */
+export const apiDeleteStudent = (id) => {
+  console.log(`API STUB: Delete student ${id}`);
+  // In a real app: return axios.delete(`/students/${id}`)
+  return Promise.resolve({ data: { id } });
+};
