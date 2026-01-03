@@ -3,6 +3,33 @@ import axios from "axios";
 
 const API = "http://localhost:5000/api";
 
+// CSS for animations
+const styles = `
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  @keyframes slideOut {
+    from {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+  }
+  .animate-slide-in {
+    animation: slideIn 0.3s ease-out;
+  }
+`;
+
 const AdminManageCourses = () => {
   /* ================= STATES ================= */
   const [programs, setPrograms] = useState([]);
@@ -42,7 +69,7 @@ const AdminManageCourses = () => {
   const [editSubjectData, setEditSubjectData] = useState({ _id: "", name: "", marks: 0, programId: "", courseId: "" });
 
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(null);
 
   /* ================= HELPERS ================= */
   const getHeaders = () => {
@@ -58,9 +85,9 @@ const AdminManageCourses = () => {
     };
   };
 
-  const notify = (msg) => {
-    setMessage(msg);
-    setTimeout(() => setMessage(""), 4000);
+  const notify = (msg, type = "info") => {
+    setMessage({ text: msg, type });
+    setTimeout(() => setMessage(null), 4000);
   };
 
   // Helper to get courses for a program
@@ -137,7 +164,7 @@ const AdminManageCourses = () => {
         { name: programName, image: programImage, ...getAuthData() },
         { headers: getHeaders() }
       );
-      notify("✅ Program created");
+      notify("✅ Program created", "success");
       setProgramName("");
       setProgramImage("");
       fetchPrograms();
@@ -370,95 +397,129 @@ const AdminManageCourses = () => {
 
   /* ================= UI ================= */
   return (
-    <div className="min-h-screen bg-gray-100 p-4 sm:p-6 space-y-10">
-
-      {/* Toast */}
-      {message && (
-        <div className="fixed top-4 right-4 z-50 bg-black text-white px-5 py-2 rounded shadow">
-          {message}
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-6 sm:py-8 px-4 sm:px-6 shadow-lg">
+        <div className="max-w-7xl mx-auto">
+          <h1 className="text-2xl sm:text-3xl font-bold">📚 Course Management</h1>
+          <p className="text-blue-100 text-sm sm:text-base mt-1">Manage programs, courses, and subjects</p>
         </div>
-      )}
+      </div>
 
-      {/* PROGRAMS */}
-      <Section title="📚 Programs" subtitle="Create and manage academic programs">
-        <Grid>
-          <Input value={programName} onChange={setProgramName} placeholder="Program Name *" />
-          <Input value={programImage} onChange={setProgramImage} placeholder="Image URL (optional)" />
-        </Grid>
-        <ActionButton onClick={handleCreateProgram} loading={loading} label="Create Program" />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 text-sm">
-          {programs.map((p) => (
-            <div key={p._id} className="bg-gray-50 border rounded px-3 py-2 flex items-center justify-between">
-              <div>
-                <div className="font-medium">{p.name}</div>
-                <div className="text-xs text-gray-500">{p._id}</div>
-              </div>
-              <div className="flex items-center gap-2">
-                <button className="text-sm text-blue-600" onClick={() => handleEditProgram(p)}>Edit</button>
-                <button className="text-sm text-red-600" onClick={() => handleDeleteProgram(p._id)}>Delete</button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </Section>
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8">
+        
+        {/* Toast Notification */}
+        {message && (
+          <div className={`fixed top-4 right-4 z-50 px-4 sm:px-6 py-3 sm:py-4 rounded-lg shadow-xl flex items-center gap-3 animate-slide-in ${
+            message.type === "success" ? "bg-green-500" : 
+            message.type === "error" ? "bg-red-500" : "bg-blue-500"
+          } text-white text-sm sm:text-base max-w-xs sm:max-w-sm`}>
+            <span className="text-lg">{
+              message.type === "success" ? "✅" : 
+              message.type === "error" ? "❌" : "ℹ️"
+            }</span>
+            <span className="font-medium">{message.text}</span>
+          </div>
+        )}
 
-      {/* COURSES */}
-      <Section title="📖 Courses" subtitle="Courses under each program">
-        <Grid>
-          <Select value={selectedProgramForCourse} onChange={setSelectedProgramForCourse} options={programs} />
-          <Input value={courseCode} onChange={setCourseCode} placeholder="Course Code *" />
-          <Input value={courseName} onChange={setCourseName} placeholder="Course Name *" />
-          <Input value={courseFee} onChange={setCourseFee} placeholder="Course Fee" />
-          <Input value={admissionFee} onChange={setAdmissionFee} placeholder="Admission Fee" />
-          <Input value={duration} onChange={setDuration} placeholder="Duration (e.g. 6 months)" />
-        </Grid>
-        <ActionButton onClick={handleCreateCourse} loading={loading} label="Create Course" />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 text-sm">
-          {courses.map((c) => (
-            <div key={c._id} className="bg-gray-50 border rounded px-3 py-2">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-medium">{c.name} <span className="text-xs text-gray-400">({c.code})</span></div>
-                  <div className="text-xs text-gray-500">Program: {c.programId?.name || c.programId}</div>
+        {/* PROGRAMS SECTION */}
+        <Section title="📚 Programs" subtitle="Create and manage academic programs" icon="🎓">
+          <Grid>
+            <Input value={programName} onChange={setProgramName} placeholder="Program Name *" />
+            <Input value={programImage} onChange={setProgramImage} placeholder="Image URL (optional)" />
+          </Grid>
+          <ActionButton onClick={handleCreateProgram} loading={loading} label="+ Create Program" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {programs.length === 0 ? (
+              <div className="col-span-full text-center py-8 text-gray-500">No programs yet</div>
+            ) : (
+              programs.map((p) => (
+                <div key={p._id} className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="font-semibold text-gray-900">{p.name}</div>
+                      <div className="text-xs text-gray-500 mt-1 truncate">{p._id}</div>
+                    </div>
+                    <div className="flex items-center gap-2 flex-shrink-0 ml-2">
+                      <button className="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition" onClick={() => handleEditProgram(p)}>Edit</button>
+                      <button className="px-2 py-1 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200 transition" onClick={() => handleDeleteProgram(p._id)}>Delete</button>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <button className="text-sm text-blue-600" onClick={() => handleEditCourse(c)}>Edit</button>
-                  <button className="text-sm text-red-600" onClick={() => handleDeleteCourse(c._id)}>Delete</button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </Section>
+              ))
+            )}
+          </div>
+        </Section>
 
-      {/* SUBJECTS */}
-      <Section title="✏️ Subjects" subtitle="Subjects mapped to courses">
-        <Grid>
-          <Select value={selectedProgramForSubject} onChange={setSelectedProgramForSubject} options={programs} />
-          <Select value={selectedCourse} onChange={setSelectedCourse} options={coursesForSubject} disabled={!selectedProgramForSubject} />
-          <Input value={subjectName} onChange={setSubjectName} placeholder="Subject Name *" />
-          <Input value={subjectMarks} onChange={setSubjectMarks} placeholder="Marks" />
-        </Grid>
-        <ActionButton onClick={handleCreateSubject} loading={loading} label="Create Subject" />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 text-sm">
-          {subjects.map((s) => (
-            <div key={s._id} className="bg-gray-50 border rounded px-3 py-2">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-medium">{s.name}</div>
-                  <div className="text-xs text-gray-500">Course: {s.courseId?.name || s.courseId} • Marks: {s.marks}</div>
+        {/* COURSES SECTION */}
+        <Section title="📖 Courses" subtitle="Courses under each program" icon="📝">
+          <Grid>
+            <Select value={selectedProgramForCourse} onChange={setSelectedProgramForCourse} options={programs} />
+            <Input value={courseCode} onChange={setCourseCode} placeholder="Course Code *" />
+            <Input value={courseName} onChange={setCourseName} placeholder="Course Name *" />
+            <Input value={courseFee} onChange={setCourseFee} placeholder="Course Fee" />
+            <Input value={admissionFee} onChange={setAdmissionFee} placeholder="Admission Fee" />
+            <Input value={duration} onChange={setDuration} placeholder="Duration (e.g. 6 months)" />
+          </Grid>
+          <ActionButton onClick={handleCreateCourse} loading={loading} label="+ Create Course" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {courses.length === 0 ? (
+              <div className="col-span-full text-center py-8 text-gray-500">No courses yet</div>
+            ) : (
+              courses.map((c) => (
+                <div key={c._id} className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="font-semibold text-gray-900">{c.name}</div>
+                      <div className="text-xs text-gray-600 mt-1">Code: {c.code}</div>
+                      <div className="text-xs text-gray-500 mt-1">Program: {c.programId?.name || c.programId}</div>
+                      <div className="text-xs text-gray-500">Fee: ₹{c.fee} | Duration: {c.duration}</div>
+                    </div>
+                    <div className="flex items-center gap-2 flex-shrink-0 ml-2">
+                      <button className="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition" onClick={() => handleEditCourse(c)}>Edit</button>
+                      <button className="px-2 py-1 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200 transition" onClick={() => handleDeleteCourse(c._id)}>Delete</button>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <button className="text-sm text-blue-600" onClick={() => handleEditSubject(s)}>Edit</button>
-                  <button className="text-sm text-red-600" onClick={() => handleDeleteSubject(s._id)}>Delete</button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </Section>
+              ))
+            )}
+          </div>
+        </Section>
 
-      {/* VIEW DASHBOARD: Programs -> Courses -> Subjects (collapsible) */}
+        {/* SUBJECTS SECTION */}
+        <Section title="✏️ Subjects" subtitle="Subjects mapped to courses" icon="📖">
+          <Grid>
+            <Select value={selectedProgramForSubject} onChange={setSelectedProgramForSubject} options={programs} />
+            <Select value={selectedCourse} onChange={setSelectedCourse} options={coursesForSubject} disabled={!selectedProgramForSubject} />
+            <Input value={subjectName} onChange={setSubjectName} placeholder="Subject Name *" />
+            <Input value={subjectMarks} onChange={setSubjectMarks} placeholder="Marks" />
+          </Grid>
+          <ActionButton onClick={handleCreateSubject} loading={loading} label="+ Create Subject" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {subjects.length === 0 ? (
+              <div className="col-span-full text-center py-8 text-gray-500">No subjects yet</div>
+            ) : (
+              subjects.map((s) => (
+                <div key={s._id} className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="font-semibold text-gray-900">{s.name}</div>
+                      <div className="text-xs text-gray-600 mt-1">Course: {s.courseId?.name || s.courseId}</div>
+                      <div className="text-xs text-gray-500 mt-1">Marks: {s.marks}</div>
+                    </div>
+                    <div className="flex items-center gap-2 flex-shrink-0 ml-2">
+                      <button className="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition" onClick={() => handleEditSubject(s)}>Edit</button>
+                      <button className="px-2 py-1 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200 transition" onClick={() => handleDeleteSubject(s._id)}>Delete</button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </Section>
+
+        {/* VIEW DASHBOARD */}
       <Section title="🔎 View Dashboard" subtitle="Browse programs, their courses and subjects">
         <div className="space-y-3">
           {programs.map((p) => (
@@ -531,78 +592,101 @@ const AdminManageCourses = () => {
       </Section>
       {/* EDIT MODALS */}
       {showEditProgramModal && (
-        <div className="fixed inset-0 flex items-center justify-center">
-          <div className="absolute inset-0 bg-black opacity-40 z-10" onClick={() => setShowEditProgramModal(false)} />
-          <div className="bg-white rounded-lg p-6 relative z-20 w-full max-w-md">
-            <h3 className="text-lg font-bold mb-3">Edit Program</h3>
-            <Input value={editProgramData.name} onChange={(v) => setEditProgramData({ ...editProgramData, name: v })} placeholder="Program Name" />
-            <Input value={editProgramData.image} onChange={(v) => setEditProgramData({ ...editProgramData, image: v })} placeholder="Image URL" />
-            <div className="flex justify-end gap-2 mt-4">
-              <button className="px-4 py-2" onClick={() => setShowEditProgramModal(false)}>Cancel</button>
-              <button className="px-4 py-2 bg-blue-600 text-white rounded" onClick={submitEditProgram}>Save</button>
+        <div className="fixed inset-0 flex items-center justify-center p-4 z-50">
+          <div className="absolute inset-0 bg-black opacity-50 z-10" onClick={() => setShowEditProgramModal(false)} />
+          <div className="bg-white rounded-xl p-6 relative z-20 w-full max-w-md shadow-2xl">
+            <h3 className="text-xl font-bold mb-4">Edit Program</h3>
+            <div className="space-y-3">
+              <Input value={editProgramData.name} onChange={(v) => setEditProgramData({ ...editProgramData, name: v })} placeholder="Program Name" />
+              <Input value={editProgramData.image} onChange={(v) => setEditProgramData({ ...editProgramData, image: v })} placeholder="Image URL" />
+            </div>
+            <div className="flex justify-end gap-2 mt-6">
+              <button className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition" onClick={() => setShowEditProgramModal(false)}>Cancel</button>
+              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2" onClick={submitEditProgram} disabled={loading}>
+                {loading && <Spinner />}
+                Save
+              </button>
             </div>
           </div>
         </div>
       )}
 
       {showEditCourseModal && (
-        <div className="fixed inset-0 flex items-center justify-center">
-          <div className="absolute inset-0 bg-black opacity-40 z-10" onClick={() => setShowEditCourseModal(false)} />
-          <div className="bg-white rounded-lg p-6 relative z-20 w-full max-w-md space-y-3">
-            <h3 className="text-lg font-bold">Edit Course</h3>
-            <Select value={editCourseData.programId} onChange={(v) => setEditCourseData({ ...editCourseData, programId: v })} options={programs} />
-            <Input value={editCourseData.code} onChange={(v) => setEditCourseData({ ...editCourseData, code: v })} placeholder="Course Code" />
-            <Input value={editCourseData.name} onChange={(v) => setEditCourseData({ ...editCourseData, name: v })} placeholder="Course Name" />
-            <Input value={String(editCourseData.fee)} onChange={(v) => setEditCourseData({ ...editCourseData, fee: v })} placeholder="Fee" />
-            <Input value={String(editCourseData.admissionFee)} onChange={(v) => setEditCourseData({ ...editCourseData, admissionFee: v })} placeholder="Admission Fee" />
-            <Input value={editCourseData.duration} onChange={(v) => setEditCourseData({ ...editCourseData, duration: v })} placeholder="Duration" />
-            <div className="flex justify-end gap-2">
-              <button className="px-4 py-2" onClick={() => setShowEditCourseModal(false)}>Cancel</button>
-              <button className="px-4 py-2 bg-blue-600 text-white rounded" onClick={submitEditCourse}>Save</button>
+        <div className="fixed inset-0 flex items-center justify-center p-4 z-50">
+          <div className="absolute inset-0 bg-black opacity-50 z-10" onClick={() => setShowEditCourseModal(false)} />
+          <div className="bg-white rounded-xl p-6 relative z-20 w-full max-w-md shadow-2xl max-h-[90vh] overflow-y-auto">
+            <h3 className="text-xl font-bold mb-4">Edit Course</h3>
+            <div className="space-y-3">
+              <Select value={editCourseData.programId} onChange={(v) => setEditCourseData({ ...editCourseData, programId: v })} options={programs} />
+              <Input value={editCourseData.code} onChange={(v) => setEditCourseData({ ...editCourseData, code: v })} placeholder="Course Code" />
+              <Input value={editCourseData.name} onChange={(v) => setEditCourseData({ ...editCourseData, name: v })} placeholder="Course Name" />
+              <Input value={String(editCourseData.fee)} onChange={(v) => setEditCourseData({ ...editCourseData, fee: v })} placeholder="Fee" />
+              <Input value={String(editCourseData.admissionFee)} onChange={(v) => setEditCourseData({ ...editCourseData, admissionFee: v })} placeholder="Admission Fee" />
+              <Input value={editCourseData.duration} onChange={(v) => setEditCourseData({ ...editCourseData, duration: v })} placeholder="Duration" />
+            </div>
+            <div className="flex justify-end gap-2 mt-6">
+              <button className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition" onClick={() => setShowEditCourseModal(false)}>Cancel</button>
+              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2" onClick={submitEditCourse} disabled={loading}>
+                {loading && <Spinner />}
+                Save
+              </button>
             </div>
           </div>
         </div>
       )}
 
       {showEditSubjectModal && (
-        <div className="fixed inset-0 flex items-center justify-center">
-          <div className="absolute inset-0 bg-black opacity-40 z-10" onClick={() => setShowEditSubjectModal(false)} />
-          <div className="bg-white rounded-lg p-6 relative z-20 w-full max-w-md space-y-3">
-            <h3 className="text-lg font-bold">Edit Subject</h3>
-            <Select value={editSubjectData.programId} onChange={(v) => setEditSubjectData({ ...editSubjectData, programId: v })} options={programs} />
-            <Select value={editSubjectData.courseId} onChange={(v) => setEditSubjectData({ ...editSubjectData, courseId: v })} options={getCoursesForProgram(editSubjectData.programId || selectedProgramForSubject)} />
-            <Input value={editSubjectData.name} onChange={(v) => setEditSubjectData({ ...editSubjectData, name: v })} placeholder="Subject Name" />
-            <Input value={String(editSubjectData.marks)} onChange={(v) => setEditSubjectData({ ...editSubjectData, marks: v })} placeholder="Marks" />
-            <div className="flex justify-end gap-2">
-              <button className="px-4 py-2" onClick={() => setShowEditSubjectModal(false)}>Cancel</button>
-              <button className="px-4 py-2 bg-blue-600 text-white rounded" onClick={submitEditSubject}>Save</button>
+        <div className="fixed inset-0 flex items-center justify-center p-4 z-50">
+          <div className="absolute inset-0 bg-black opacity-50 z-10" onClick={() => setShowEditSubjectModal(false)} />
+          <div className="bg-white rounded-xl p-6 relative z-20 w-full max-w-md shadow-2xl">
+            <h3 className="text-xl font-bold mb-4">Edit Subject</h3>
+            <div className="space-y-3">
+              <Select value={editSubjectData.programId} onChange={(v) => setEditSubjectData({ ...editSubjectData, programId: v })} options={programs} />
+              <Select value={editSubjectData.courseId} onChange={(v) => setEditSubjectData({ ...editSubjectData, courseId: v })} options={getCoursesForProgram(editSubjectData.programId || selectedProgramForSubject)} />
+              <Input value={editSubjectData.name} onChange={(v) => setEditSubjectData({ ...editSubjectData, name: v })} placeholder="Subject Name" />
+              <Input value={String(editSubjectData.marks)} onChange={(v) => setEditSubjectData({ ...editSubjectData, marks: v })} placeholder="Marks" />
+            </div>
+            <div className="flex justify-end gap-2 mt-6">
+              <button className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition" onClick={() => setShowEditSubjectModal(false)}>Cancel</button>
+              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2" onClick={submitEditSubject} disabled={loading}>
+                {loading && <Spinner />}
+                Save
+              </button>
             </div>
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 };
 
 /* ================= UI HELPERS ================= */
 
-const Section = ({ title, subtitle, children }) => (
-  <div className="bg-white rounded-xl shadow p-5 sm:p-6 space-y-4">
+const Spinner = () => (
+  <div className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+);
+
+const Section = ({ title, subtitle, icon, children }) => (
+  <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition p-5 sm:p-6 space-y-4">
     <div>
-      <h2 className="text-xl font-bold">{title}</h2>
-      <p className="text-sm text-gray-500">{subtitle}</p>
+      <h2 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center gap-2">
+        <span className="text-2xl">{icon}</span>
+        {title}
+      </h2>
+      <p className="text-xs sm:text-sm text-gray-600 mt-1">{subtitle}</p>
     </div>
     {children}
   </div>
 );
 
 const Grid = ({ children }) => (
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">{children}</div>
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">{children}</div>
 );
 
 const Input = ({ value, onChange, placeholder }) => (
   <input
-    className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
+    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 sm:py-3 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
     value={value}
     placeholder={placeholder}
     onChange={(e) => onChange(e.target.value)}
@@ -611,7 +695,7 @@ const Input = ({ value, onChange, placeholder }) => (
 
 const Select = ({ value, onChange, options, disabled }) => (
   <select
-    className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
+    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 sm:py-3 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed transition"
     value={value}
     disabled={disabled}
     onChange={(e) => onChange(e.target.value)}
@@ -627,20 +711,11 @@ const ActionButton = ({ onClick, loading, label }) => (
   <button
     onClick={onClick}
     disabled={loading}
-    className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg disabled:opacity-50"
+    className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 text-white px-6 py-2.5 sm:py-3 rounded-lg font-medium transition transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2 text-sm sm:text-base"
   >
-    {loading ? "Please wait..." : label}
+    {loading && <Spinner />}
+    {label}
   </button>
-);
-
-const ResponsiveList = ({ items }) => (
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 text-sm">
-    {items.map((i, idx) => (
-      <div key={idx} className="bg-gray-50 border rounded px-3 py-2">
-        {i}
-      </div>
-    ))}
-  </div>
 );
 
 export default AdminManageCourses;
