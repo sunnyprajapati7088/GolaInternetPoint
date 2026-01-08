@@ -280,27 +280,59 @@ const AdminManageStudents = () => {
       const courseId = marksheetEnrollment.courseId?._id || marksheetEnrollment.courseId;
       const enrollmentId = marksheetEnrollment._id;
 
-      // Build subject marks array
-      const marksData = Object.entries(subjectMarks).map(([subjectId,, marks]) => ({
-        subjectId,
-        marks: Number(marks) || 0,
-      }));
+      let totalMaxMarks = 0;
+      let totalObtainedMarks = 0;
+
+      // Build subject marks array and calculate totals
+      const marksData = Object.entries(subjectMarks).map(([subjectId, marks]) => {
+        const obMarks = Number(marks) || 0;
+        const maxMarks = 100; // As per UI input
+        totalMaxMarks += maxMarks;
+        totalObtainedMarks += obMarks;
+
+        return {
+          subjectId,
+          marksObtained: obMarks,
+          maxMarks: maxMarks
+        };
+      });
+
+      if (marksData.length === 0) {
+        notify("Please enter marks for at least one subject", "error");
+        setLoading(false);
+        return;
+      }
+
+      // Calculate Grade
+      const percentage = (totalObtainedMarks / totalMaxMarks) * 100;
+      let grade = 'F';
+      if (percentage >= 80) grade = 'A+';
+      else if (percentage >= 70) grade = 'A';
+      else if (percentage >= 60) grade = 'B';
+      else if (percentage >= 50) grade = 'C';
+      else if (percentage >= 33) grade = 'D';
 
       const payload = {
         studentId,
         courseId,
         enrollmentId,
         subjectMarks: marksData,
+        totalMarks: totalMaxMarks,
+        totalObtained: totalObtainedMarks,
+        grade,
         ...getAuthData(),
       };
 
       console.log("Marksheet payload:", payload);
+
+      await axios.post(`http://localhost:5000/api/marksheets/createMarksheet`, payload, { headers: getHeaders() });
+
       notify("Marksheet submitted successfully", "success");
       setShowMarksheetModal(false);
       setMarksheetEnrollment(null);
       setSubjectMarks({});
     } catch (err) {
-      notify("Failed to submit marksheet", "error");
+      notify(err.response?.data?.message || "Failed to submit marksheet", "error");
       console.error(err);
     } finally {
       setLoading(false);
@@ -331,16 +363,15 @@ const AdminManageStudents = () => {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8">
-        
+
         {/* Toast Notification */}
         {message && (
-          <div className={`fixed top-4 right-4 z-50 px-4 sm:px-6 py-3 sm:py-4 rounded-lg shadow-xl flex items-center gap-3 animate-slide-in ${
-            message.type === "success" ? "bg-green-500" : 
-            message.type === "error" ? "bg-red-500" : "bg-blue-500"
-          } text-white text-sm sm:text-base max-w-xs sm:max-w-sm`}>
+          <div className={`fixed top-4 right-4 z-50 px-4 sm:px-6 py-3 sm:py-4 rounded-lg shadow-xl flex items-center gap-3 animate-slide-in ${message.type === "success" ? "bg-green-500" :
+              message.type === "error" ? "bg-red-500" : "bg-blue-500"
+            } text-white text-sm sm:text-base max-w-xs sm:max-w-sm`}>
             <span className="text-lg">{
-              message.type === "success" ? "✅" : 
-              message.type === "error" ? "❌" : "ℹ️"
+              message.type === "success" ? "✅" :
+                message.type === "error" ? "❌" : "ℹ️"
             }</span>
             <span className="font-medium">{message.text}</span>
           </div>
@@ -638,7 +669,7 @@ const MarksheetModal = ({ enrollment, subjects, subjectMarks, setSubjectMarks, o
   const student = enrollment.studentId || {};
   const course = enrollment.courseId || {};
   const courseId = typeof course === 'string' ? course : course._id;
-  
+
   // Filter subjects for this course
   const enrollmentSubjects = subjects.filter((s) => {
     if (!s.courseId) return false;
@@ -647,7 +678,7 @@ const MarksheetModal = ({ enrollment, subjects, subjectMarks, setSubjectMarks, o
   });
 
   console.log("Course ID:", courseId);
-  console.log("All subjects:", subjects,student);
+  console.log("All subjects:", subjects, student);
   console.log("Filtered subjects:", enrollmentSubjects);
 
   return (
