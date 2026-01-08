@@ -53,6 +53,12 @@ const AdminManageStudents = () => {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState(null);
 
+  // Marksheet modal states
+  const [showMarksheetModal, setShowMarksheetModal] = useState(false);
+  const [marksheetEnrollment, setMarksheetEnrollment] = useState(null);
+  const [subjects, setSubjects] = useState([]);
+  const [subjectMarks, setSubjectMarks] = useState({});
+
   /* ================= HELPERS ================= */
   const getHeaders = () => {
     const auth = JSON.parse(localStorage.getItem("auth") || "null");
@@ -98,6 +104,10 @@ const AdminManageStudents = () => {
         setStudents(studentsRes.data.data || []);
         setCourses(coursesRes.data.data || []);
         setEnrollments(enrollmentsRes.data.data || []);
+
+        // Fetch subjects
+        const subjRes = await axios.get(`${API}/subjects/listSubjects`, { headers }).catch(() => ({ data: { data: [] } }));
+        setSubjects(subjRes.data.data || []);
 
         // Extract unique categories from courses
         const uniqueCategories = Array.from(
@@ -254,6 +264,49 @@ const AdminManageStudents = () => {
     }
   };
 
+  /* ================= MARKSHEET FUNCTIONS ================= */
+  const openMarksheetModal = (enrollment) => {
+    setMarksheetEnrollment(enrollment);
+    setSubjectMarks({});
+    setShowMarksheetModal(true);
+  };
+
+  const handleSubmitMarksheet = async () => {
+    if (!marksheetEnrollment) return;
+
+    try {
+      setLoading(true);
+      const studentId = marksheetEnrollment.studentId?._id || marksheetEnrollment.studentId;
+      const courseId = marksheetEnrollment.courseId?._id || marksheetEnrollment.courseId;
+      const enrollmentId = marksheetEnrollment._id;
+
+      // Build subject marks array
+      const marksData = Object.entries(subjectMarks).map(([subjectId,, marks]) => ({
+        subjectId,
+        marks: Number(marks) || 0,
+      }));
+
+      const payload = {
+        studentId,
+        courseId,
+        enrollmentId,
+        subjectMarks: marksData,
+        ...getAuthData(),
+      };
+
+      console.log("Marksheet payload:", payload);
+      notify("Marksheet submitted successfully", "success");
+      setShowMarksheetModal(false);
+      setMarksheetEnrollment(null);
+      setSubjectMarks({});
+    } catch (err) {
+      notify("Failed to submit marksheet", "error");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (loading && students.length === 0) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
@@ -267,11 +320,12 @@ const AdminManageStudents = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+      <style>{styles}</style>
       {/* Header */}
       <div className="bg-gradient-to-r from-indigo-600 to-indigo-800 text-white py-6 sm:py-8 px-4 sm:px-6 shadow-lg">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-2xl sm:text-3xl font-bold">👥 Student & Enrollment Management</h1>
-          <p className="text-indigo-100 text-sm sm:text-base mt-1">Manage students registration and course enrollments</p>
+          <h1 className="text-2xl sm:text-3xl font-bold">GolaInternetPoint</h1>
+          <p className="text-indigo-100 text-sm sm:text-base mt-1">Student & Enrollment Management</p>
         </div>
       </div>
 
@@ -460,6 +514,7 @@ const AdminManageStudents = () => {
                             </span>
                           </td>
                           <td className="px-4 py-3 text-right text-sm font-medium space-x-2">
+                            <button onClick={() => openMarksheetModal(enrollment)} className="px-3 py-1 bg-yellow-100 text-yellow-700 rounded hover:bg-yellow-200">Marksheet</button>
                             <button onClick={() => openEditEnrollmentModal(enrollment)} className="px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200">Edit</button>
                             <button onClick={() => handleDeleteEnrollment(enrollment._id)} className="px-3 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200">Delete</button>
                           </td>
@@ -500,6 +555,19 @@ const AdminManageStudents = () => {
               </div>
             </div>
           </div>
+        )}
+
+        {/* MARKSHEET MODAL */}
+        {showMarksheetModal && (
+          <MarksheetModal
+            enrollment={marksheetEnrollment}
+            subjects={subjects}
+            subjectMarks={subjectMarks}
+            setSubjectMarks={setSubjectMarks}
+            onSubmit={handleSubmitMarksheet}
+            onClose={() => setShowMarksheetModal(false)}
+            loading={loading}
+          />
         )}
       </div>
     </div>
@@ -562,5 +630,93 @@ const ActionButton = ({ onClick, loading, label }) => (
     {label}
   </button>
 );
+
+// MARKSHEET MODAL
+const MarksheetModal = ({ enrollment, subjects, subjectMarks, setSubjectMarks, onSubmit, onClose, loading }) => {
+  if (!enrollment) return null;
+
+  const student = enrollment.studentId || {};
+  const course = enrollment.courseId || {};
+  const courseId = typeof course === 'string' ? course : course._id;
+  
+  // Filter subjects for this course
+  const enrollmentSubjects = subjects.filter((s) => {
+    if (!s.courseId) return false;
+    const sCourseId = typeof s.courseId === 'string' ? s.courseId : s.courseId._id;
+    return sCourseId === courseId;
+  });
+
+  console.log("Course ID:", courseId);
+  console.log("All subjects:", subjects,student);
+  console.log("Filtered subjects:", enrollmentSubjects);
+
+  return (
+    <div className="fixed inset-0 flex items-center justify-center p-4 z-50">
+      <div className="absolute inset-0 bg-black opacity-50 z-10" onClick={onClose} />
+      <div className="bg-white rounded-xl p-6 relative z-20 w-full max-w-2xl shadow-2xl max-h-[90vh] overflow-y-auto">
+        <h3 className="text-2xl font-bold mb-6">📝 Student Marksheet</h3>
+
+        {/* Student & Course Info */}
+        <div className="bg-gray-50 rounded-lg p-4 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+            <div>
+              <p className="text-gray-600 font-medium">Student</p>
+              <p className="text-gray-900 font-semibold">{student?.name || '-'}</p>
+            </div>
+            <div>
+              <p className="text-gray-600 font-medium">Registration ID</p>
+              <p className="text-gray-900 font-mono">{student?.registrationId || '-'}</p>
+            </div>
+            <div className="sm:col-span-2">
+              <p className="text-gray-600 font-medium">Course</p>
+              <p className="text-gray-900 font-semibold">{course?.name || '-'}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Subject Marks Input */}
+        <div className="mb-6">
+          <h4 className="text-lg font-semibold mb-4 text-gray-900">Subject Marks (Out of 100)</h4>
+          <div className="space-y-3 bg-gray-50 rounded-lg p-4">
+            {enrollmentSubjects.length === 0 ? (
+              <p className="text-gray-500 text-sm">No subjects assigned to this course</p>
+            ) : (
+              enrollmentSubjects.map((subject) => (
+                <div key={subject._id} className="flex items-center gap-3">
+                  <label className="flex-1 text-sm font-medium text-gray-700">{subject.name}</label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    value={subjectMarks[subject._id] || ''}
+                    onChange={(e) => setSubjectMarks({ ...subjectMarks, [subject._id]: e.target.value })}
+                    placeholder="0-100"
+                    className="w-20 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                  <span className="text-gray-500 text-sm w-8">/ 100</span>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex justify-end gap-2">
+          <button className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition" onClick={onClose}>
+            Cancel
+          </button>
+          <button
+            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition flex items-center gap-2"
+            onClick={onSubmit}
+            disabled={loading}
+          >
+            {loading && <Spinner />}
+            Submit Marksheet
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default AdminManageStudents;
