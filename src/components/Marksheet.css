@@ -17,7 +17,7 @@
 ================================================= */
 .marksheet-container {
   width: 205mm;
-  height: 297mm;
+  height: 285mm;
   margin: 0 auto;
   display: flex;
   justify-content: center;
@@ -49,7 +49,7 @@
 .marksheet {
   position: relative;
   width: 210mm;
-  height: 297mm;
+  height: 290mm;
   padding: 12mm;
   border: 4px solid var(--border);
   font-family: Arial, sans-serif;
@@ -68,9 +68,9 @@
   content: "";
   position: absolute;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='35'%3E%3Ctext x='0' y='15' fill='rgba(0,0,0,0.12)' font-size='12' font-weight='700'%3EGOLA INTERNET%3C/text%3E%3Ctext x='0' y='30' fill='rgba(0,0,0,0.12)' font-size='12' font-weight='700'%3EGOLA INTERNET%3C/text%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='300'%3E%3Ctext x='0' y='120' fill='rgba(0,0,0,0.05)' font-size='110' font-weight='700'%3EGCE %26amp; SDF%3C/text%3E%3Ctext x='0' y='260' fill='rgba(0,0,0,0.05)' font-size='110' font-weight='700'%3EGCE %26amp; SDF%3C/text%3E%3C/svg%3E");
   background-repeat: repeat;
-  background-size: 130px 36px;
+  background-size: 85px 32px;
   z-index: 0;
 
   -webkit-print-color-adjust: exact;
@@ -87,7 +87,7 @@
   left: 50%;
   width: 160mm;
   height: 140mm;
-  background: url("/img/watermark.webp") no-repeat center / contain;
+  background: url("") no-repeat center / contain;
   transform: translate(-50%, -50%);
   opacity: 0.25;
   z-index: 0;
@@ -97,7 +97,7 @@
 }
 
 /* CONTENT ABOVE WATERMARK */
-.marksheet > * {
+.marksheet>* {
   position: relative;
   z-index: 1;
 }
@@ -221,7 +221,10 @@
 /* =================================================
    SUBJECT MARKS TABLE
 ================================================= */
-table {
+/* =================================================
+   SUBJECT MARKS TABLE
+================================================= */
+.marksheet table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
@@ -229,28 +232,35 @@ table {
   word-wrap: break-word;
 }
 
-table thead tr {
-  background-color: #f2f2f2;
+.marksheet table thead tr {
+  background-color: transparent;
+  /* Removed global grey, user asked for transparent earlier in Card but keeping safe default or scoped */
 }
 
-table th,
-table td {
+/* User previously asked to remove bg-gray-100 from Header/Total in CertificateCard.jsx directly. 
+   But here in CSS it was #f2f2f2.
+   Let's make sure we respect the transparent background request for certificate too if needed, 
+   but definitely scope it. */
+
+.marksheet table th,
+.marksheet table td {
   border: 1px solid #000;
   padding: 6px 8px;
   text-align: center;
   font-size: 14px;
 }
 
-table th {
+.marksheet table th {
   font-weight: bold;
 }
 
-tbody tr:last-child {
-  background-color: #d9edf7;
+.marksheet tbody tr:last-child {
+  background-color: transparent;
+  /* Was #d9edf7, probably should be safe or transparent based on user pref */
   font-weight: bold;
 }
 
-td:first-child {
+.marksheet td:first-child {
   width: 40px;
 }
 
@@ -268,6 +278,7 @@ td:first-child {
    PRINT SETTINGS
 ================================================= */
 @media print {
+
   html,
   body {
     width: 210mm;

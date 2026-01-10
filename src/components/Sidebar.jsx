@@ -8,7 +8,7 @@ const Sidebar = ({ role, route, onClose }) => {
   const ADMIN_LINKS = [
     { name: 'Dashboard', icon: 'dashboard', path: '/admin/dashboard' },
     { name: 'Manage Courses', icon: 'book', path: '/admin/courses' },
-    { name: 'Manage Franchise', icon: 'building', path: '/admin/franchises' },
+    // { name: 'Manage Franchise', icon: 'building', path: '/admin/franchises' },
     { name: 'Manage Students', icon: 'users', path: '/admin/students' },
     { name: 'Certificates', icon: 'award', path: '/admin/certificates' },
     { name: 'Reports', icon: 'fileText', path: '/admin/reports' },

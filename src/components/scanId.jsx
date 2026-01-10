@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
-const API = "http://localhost:5000/api";
+import { API } from '../config';
 
 function ScanId() {
   const { userId } = useParams();
-  
+
   // State for user data
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -61,13 +61,13 @@ function ScanId() {
     <div className="p-6 max-w-2xl mx-auto">
       <div className="bg-white rounded-lg shadow p-6">
         <h2 className="text-2xl font-bold mb-4">User Information</h2>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <p className="text-sm text-gray-500">Name</p>
             <p className="text-lg font-semibold">{userData.name || "N/A"}</p>
           </div>
-          
+
           <div>
             <p className="text-sm text-gray-500">Registration ID</p>
             <p className="text-lg font-semibold">{userData.registrationId || "N/A"}</p>

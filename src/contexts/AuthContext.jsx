@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext } from 'react';
 import axios from 'axios';
+import { API } from '../config';
 
 const AuthContext = createContext(null);
 
@@ -35,29 +36,29 @@ export const AuthProvider = ({ children }) => {
 			userData = { name: 'Demo Student', role: 'student', id: 'S1001' };
 		}
 		setUser(userData);
-		try { localStorage.setItem('user', JSON.stringify(userData)); } catch (e) {}
+		try { localStorage.setItem('user', JSON.stringify(userData)); } catch (e) { }
 		return userData; // Return user to help router navigate
 	};
 
 	// Email/password authentication (calls backend)
 	const loginWithCredentials = async (email, password) => {
 		try {
-			const url = 'http://localhost:5000/api/auth/login';
+			const url = `${API}/auth/login`;
 			const res = await axios.post(url, { email, password });
 			const data = res.data || {};
 
 			// Try to extract token and user
 			const token = data.token || data.accessToken || data.authToken || (data.data && (data.data.token || data.data.accessToken));
-			const userData = data.user || (data.role ? data : (data.data && data.data.user) ) || data;
+			const userData = data.user || (data.role ? data : (data.data && data.data.user)) || data;
 
 			if (token) {
-				try { localStorage.setItem('authToken', token); } catch (e) {}
+				try { localStorage.setItem('authToken', token); } catch (e) { }
 				axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 			}
 
 			if (userData) {
 				setUser(userData);
-				try { localStorage.setItem('user', JSON.stringify(userData)); } catch (e) {}
+				try { localStorage.setItem('user', JSON.stringify(userData)); } catch (e) { }
 				return userData;
 			}
 
@@ -70,8 +71,8 @@ export const AuthProvider = ({ children }) => {
 
 	const logout = () => {
 		setUser(null);
-		try { localStorage.removeItem('user'); localStorage.removeItem('authToken'); } catch (e) {}
-		try { delete axios.defaults.headers.common['Authorization']; } catch (e) {}
+		try { localStorage.removeItem('user'); localStorage.removeItem('authToken'); } catch (e) { }
+		try { delete axios.defaults.headers.common['Authorization']; } catch (e) { }
 	};
 
 	return (

@@ -37,73 +37,67 @@ import Header from './pages/LandingPageComponentes/LandingComponent';
 import CreateUser from './components/RegisterStudent';
 import AdminManageStudents from './pages/admin/AdminManageStudents';
 import ScanId from './components/scanId';
+import CertificateCardPage from './pages/admin/CertificateCardPage';
 
 
 // We need a wrapper to provide navigate to the Navbar
 const AppRouter = () => {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
+       const { user, logout } = useAuth();
+       const navigate = useNavigate();
 
-  return (
-    <>
- {/*      <Navbar 
-        user={user} 
-        onLogout={() => {
-          logout();
-          navigate('/');
-        }} 
-        onToggleMobileMenu={() => {}} // Add your toggle logic
-      /> */}
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<Header />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/scanid/:userIdToFetch" element={<ScanId />} />
-        <Route path="/courses" element={<CoursesPage />} />
-        <Route path="/verify" element={<VerifyPage />} />
-            <Route path="certificates" element={<StudentMyCertificates />} />
+       return (
+              <>
+                     <Routes>
+                            {/* Public Routes */}
+                            <Route path="/" element={<Header />} />
+                            <Route path="/login" element={<LoginPage />} />
+                            <Route path="/scanid/:userIdToFetch" element={<ScanId />} />
+                            <Route path="/courses" element={<CoursesPage />} />
+                            <Route path="/verify" element={<VerifyPage />} />
+                            <Route path="certificates" element={<StudentMyCertificates />} />
 
-        {/* Admin Routes */}
-        <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
-          <Route path="/admin" element={<DashboardLayout />}>
-            <Route path="dashboard" element={<AdminDashboard />} />
-            <Route path="courses" element={<AdminManageCourses />} />
-            <Route path="franchises" element={<AdminManageFranchise />} />
-            <Route path="students" element={<AdminManageStudents title="Manage Students" />} />
-            <Route path="certificates" element={<AdminCertificates />} />
-            <Route path="reports" element={<PageStub title="View Reports" />} />
-    <Route path="/admin/add-student" element={<CreateUser title="Add Student" />} />
+                            {/* Admin Routes */}
+                            <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
+                                   <Route path="/admin" element={<DashboardLayout />}>
+                                          <Route path="dashboard" element={<AdminDashboard />} />
+                                          <Route path="courses" element={<AdminManageCourses />} />
+                                          <Route path="franchises" element={<AdminManageFranchise />} />
+                                          <Route path="students" element={<AdminManageStudents title="Manage Students" />} />
+                                          <Route path="certificates" element={<AdminCertificates />} />
+                                          <Route path="reports" element={<PageStub title="View Reports" />} />
+                                          <Route path="/admin/add-student" element={<CreateUser title="Add Student" />} />
+                                   </Route>
+                                   {/* Standalone Admin Pages (No Sidebar) */}
+                                   <Route path="/admin/certificate-card" element={<CertificateCardPage />} />
+                            </Route>
 
-    </Route>
-        </Route>
-        
-        {/* Franchise Routes */}
-        <Route element={<ProtectedRoute allowedRoles={['franchise']} />}>
-          <Route path="/franchise" element={<DashboardLayout />}>
-            <Route path="dashboard" element={<FranchiseDashboard />} />
-            <Route path="add-student" element={<FranchiseAddStudent />} />
-            <Route path="manage-students" element={<PageStub title="Manage My Students" />} />
-            <Route path="issue-certificate" element={<FranchiseIssueCertificate />} />
-            <Route path="issue-id" element={<PageStub title="Issue ID Card" />} />
-          </Route>
-        </Route>
+                            {/* Franchise Routes */}
+                            <Route element={<ProtectedRoute allowedRoles={['franchise']} />}>
+                                   <Route path="/franchise" element={<DashboardLayout />}>
+                                          <Route path="dashboard" element={<FranchiseDashboard />} />
+                                          <Route path="add-student" element={<FranchiseAddStudent />} />
+                                          <Route path="manage-students" element={<PageStub title="Manage My Students" />} />
+                                          <Route path="issue-certificate" element={<FranchiseIssueCertificate />} />
+                                          <Route path="issue-id" element={<PageStub title="Issue ID Card" />} />
+                                   </Route>
+                            </Route>
 
-        {/* Student Routes */}
-        <Route element={<ProtectedRoute allowedRoles={['student']} />}>
-          <Route path="/student" element={<DashboardLayout />}>
-            <Route path="dashboard" element={<StudentDashboard />} />
-            <Route path="courses" element={<StudentMyCourses />} />
-            <Route path="certificates" element={<StudentMyCertificates />} />
-            <Route path="id-card" element={<StudentMyIDCard />} />
-            <Route path="exam" element={<PageStub title="Online Exam" />} />
-          </Route>
-        </Route>
+                            {/* Student Routes */}
+                            <Route element={<ProtectedRoute allowedRoles={['student']} />}>
+                                   <Route path="/student" element={<DashboardLayout />}>
+                                          <Route path="dashboard" element={<StudentDashboard />} />
+                                          <Route path="courses" element={<StudentMyCourses />} />
+                                          <Route path="certificates" element={<StudentMyCertificates />} />
+                                          <Route path="id-card" element={<StudentMyIDCard />} />
+                                          <Route path="exam" element={<PageStub title="Online Exam" />} />
+                                   </Route>
+                            </Route>
 
-        {/* Not Found */}
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-    </>
-  );
+                            {/* Not Found */}
+                            <Route path="*" element={<NotFoundPage />} />
+                     </Routes>
+              </>
+       );
 };
 
 export default AppRouter;

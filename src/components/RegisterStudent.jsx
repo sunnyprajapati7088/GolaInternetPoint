@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from 'axios';
+import { API } from '../config';
 
 const ROLES = {
   SUPERADMIN: "superadmin",
@@ -122,14 +123,14 @@ const CreateUser = () => {
       // ignore
     }
 
-    axios.post('http://localhost:5000/api/auth/register', payload, { headers })
+    axios.post(`${API}/auth/register`, payload, { headers })
       .then((res) => {
         console.log('Register response', res.data);
         alert('User created successfully');
         // Optionally save created user to localStorage under 'user'
         try {
           localStorage.setItem('user', JSON.stringify(res.data));
-        } catch (err) {}
+        } catch (err) { }
 
         // Reset form (keep role default)
         setForm({
@@ -205,23 +206,23 @@ const CreateUser = () => {
             <div className="border rounded-lg p-4">
               <h3 className="text-lg font-semibold text-indigo-600 mb-3">Student Profile</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <input name="fatherName" placeholder="Father Name" onChange={(e)=>handleProfileChange("studentProfile", e)} className="input" />
-                <input name="motherName" placeholder="Mother Name" onChange={(e)=>handleProfileChange("studentProfile", e)} className="input" />
-                <select name="gender" onChange={(e)=>handleProfileChange("studentProfile", e)} className="input">
+                <input name="fatherName" placeholder="Father Name" onChange={(e) => handleProfileChange("studentProfile", e)} className="input" />
+                <input name="motherName" placeholder="Mother Name" onChange={(e) => handleProfileChange("studentProfile", e)} className="input" />
+                <select name="gender" onChange={(e) => handleProfileChange("studentProfile", e)} className="input">
                   <option value="">Gender</option>
                   <option>Male</option>
                   <option>Female</option>
                   <option>Other</option>
                 </select>
-                <input type="date" name="dateOfBirth" onChange={(e)=>handleProfileChange("studentProfile", e)} className="input" />
-                <input name="admissionYear" placeholder="Admission Year (2025-26)" onChange={(e)=>handleProfileChange("studentProfile", e)} className="input" />
-                <input name="qualification" placeholder="Qualification" onChange={(e)=>handleProfileChange("studentProfile", e)} className="input" />
-                <input name="category" placeholder="Category" onChange={(e)=>handleProfileChange("studentProfile", e)} className="input" />
-                <input name="religion" placeholder="Religion" onChange={(e)=>handleProfileChange("studentProfile", e)} className="input" />
-                <input name="address" placeholder="Address" onChange={(e)=>handleProfileChange("studentProfile", e)} className="input" />
-                <input name="state" placeholder="State" onChange={(e)=>handleProfileChange("studentProfile", e)} className="input" />
-                <input name="district" placeholder="District" onChange={(e)=>handleProfileChange("studentProfile", e)} className="input" />
-                <input name="pincode" placeholder="Pincode" onChange={(e)=>handleProfileChange("studentProfile", e)} className="input" />
+                <input type="date" name="dateOfBirth" onChange={(e) => handleProfileChange("studentProfile", e)} className="input" />
+                <input name="admissionYear" placeholder="Admission Year (2025-26)" onChange={(e) => handleProfileChange("studentProfile", e)} className="input" />
+                <input name="qualification" placeholder="Qualification" onChange={(e) => handleProfileChange("studentProfile", e)} className="input" />
+                <input name="category" placeholder="Category" onChange={(e) => handleProfileChange("studentProfile", e)} className="input" />
+                <input name="religion" placeholder="Religion" onChange={(e) => handleProfileChange("studentProfile", e)} className="input" />
+                <input name="address" placeholder="Address" onChange={(e) => handleProfileChange("studentProfile", e)} className="input" />
+                <input name="state" placeholder="State" onChange={(e) => handleProfileChange("studentProfile", e)} className="input" />
+                <input name="district" placeholder="District" onChange={(e) => handleProfileChange("studentProfile", e)} className="input" />
+                <input name="pincode" placeholder="Pincode" onChange={(e) => handleProfileChange("studentProfile", e)} className="input" />
               </div>
             </div>
           )}
@@ -231,11 +232,11 @@ const CreateUser = () => {
             <div className="border rounded-lg p-4">
               <h3 className="text-lg font-semibold text-indigo-600 mb-3">Employee Profile</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <input name="department" placeholder="Department" onChange={(e)=>handleProfileChange("employeeProfile", e)} className="input" />
-                <input name="designation" placeholder="Designation" onChange={(e)=>handleProfileChange("employeeProfile", e)} className="input" />
-                <input type="date" name="joiningDate" onChange={(e)=>handleProfileChange("employeeProfile", e)} className="input" />
-                <input name="salary" placeholder="Salary" onChange={(e)=>handleProfileChange("employeeProfile", e)} className="input" />
-                <input name="qualification" placeholder="Qualification" onChange={(e)=>handleProfileChange("employeeProfile", e)} className="input" />
+                <input name="department" placeholder="Department" onChange={(e) => handleProfileChange("employeeProfile", e)} className="input" />
+                <input name="designation" placeholder="Designation" onChange={(e) => handleProfileChange("employeeProfile", e)} className="input" />
+                <input type="date" name="joiningDate" onChange={(e) => handleProfileChange("employeeProfile", e)} className="input" />
+                <input name="salary" placeholder="Salary" onChange={(e) => handleProfileChange("employeeProfile", e)} className="input" />
+                <input name="qualification" placeholder="Qualification" onChange={(e) => handleProfileChange("employeeProfile", e)} className="input" />
               </div>
             </div>
           )}
