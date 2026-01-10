@@ -68,8 +68,9 @@ const AppRouter = () => {
                                           <Route path="/admin/add-student" element={<CreateUser title="Add Student" />} />
                                    </Route>
                                    {/* Standalone Admin Pages (No Sidebar) */}
-                                   <Route path="/admin/certificate-card" element={<CertificateCardPage />} />
+                                  
                             </Route>
+                             <Route path="/admin/certificate-card" element={<CertificateCardPage />} />
 
                             {/* Franchise Routes */}
                             <Route element={<ProtectedRoute allowedRoles={['franchise']} />}>
