@@ -6,9 +6,9 @@ import QRCode from "react-qr-code";
 
 function CertificateCard({ data }) {
   // Use passed data or fall back to empty defaults safely
-  const { student, course, subjects, subjectMarks, totalMarks, totalObtained, grade } = data || {};
+  const { studentId, course, subjects, subjectMarks, totalMarks, totalObtained, grade } = data || {};
 
-  console.log(data);
+  console.log( studentId, course, subjects, subjectMarks, totalMarks, totalObtained, grade);
   const displaySubjects = subjectMarks || subjects || [];
 
   const total = displaySubjects.reduce((a, b) => a + (Number(b.marksObtained) || 0), 0);
@@ -33,7 +33,7 @@ function CertificateCard({ data }) {
 
           <div className="qr-boxdata text-right">
             <div className="qr-reg font-bold mb-2">
-              Regis No: <span className="text-red-600">{student?.registrationId || "N/A"}</span>
+              Regis No: <span className="text-red-600">{studentId?.registrationId || "N/A"}</span>
             </div>
             <div className="w-24 h-24 ml-auto">
               <QRCode
@@ -67,14 +67,14 @@ function CertificateCard({ data }) {
           {course?.name || "Certificate Course"}
         </h4>
 
-        {/* STUDENT INFO */}
-        <div className="student-info grid grid-cols-2 gap-x-8 gap-y-2 mb-8 text-sm">
-          <p><b className="min-w-[120px] inline-block">Name:</b> {student?.name}</p>
-          <p><b className="min-w-[120px] inline-block">Registration No:</b> {student?.registrationId}</p>
-          <p><b className="min-w-[120px] inline-block">Father Name:</b> {student?.studentProfile?.fatherName || "-"}</p>
-          <p><b className="min-w-[120px] inline-block">DOB:</b> {formatDate(student?.studentProfile?.dateOfBirth)}</p>
+        {/* studentId INFO */}
+        <div className="studentId-info grid grid-cols-2 gap-x-8 gap-y-2 mb-8 text-sm">
+          <p><b className="min-w-[120px] inline-block">Name:</b> {studentId?.name}</p>
+          <p><b className="min-w-[120px] inline-block">Registration No:</b> {studentId?.registrationId}</p>
+          <p><b className="min-w-[120px] inline-block">Father Name:</b> {studentId?.studentProfile?.fatherName || "-"}</p>
+          <p><b className="min-w-[120px] inline-block">DOB:</b> {formatDate(studentId?.studentProfile?.dateOfBirth)}</p>
           <p><b className="min-w-[120px] inline-block">Duration:</b> {course?.duration || "12 Months"}</p>
-          <p><b className="min-w-[120px] inline-block">Session:</b> {student?.studentProfile?.admissionYear || "2025-2026"}</p>
+          <p><b className="min-w-[120px] inline-block">Session:</b> {studentId?.studentProfile?.admissionYear || "2025-2026"}</p>
         </div>
 
 

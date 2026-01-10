@@ -7,6 +7,7 @@ const CertificateCardPage = () => {
     const navigate = useNavigate();
     const { marksheet } = location.state || {};
 
+    console.log(marksheet);
     if (!marksheet) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white">
