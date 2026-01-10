@@ -1,133 +1,75 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import { API } from '../config';
 
 function ScanId() {
-  const { userId } = useParams();
+  const { userIdToFetch } = useParams();
+  const navigate = useNavigate();
 
-  // State for user data
-  const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Fetch user data from /api/auth/{userId}
   useEffect(() => {
+    console.log(userIdToFetch);
     const fetchUserData = async () => {
       try {
         setLoading(true);
-        const auth = JSON.parse(localStorage.getItem("auth") || "null");
-        const userIdToFetch = userId || auth?.userId;
 
         if (!userIdToFetch) {
-          setError("User ID not found");
+          setError("User ID not found in URL");
           setLoading(false);
           return;
         }
 
-        // Fetch from /api/auth/{userId} - no token needed
-        const res = await axios.get(`${API}/auth/${userIdToFetch}`);
+        // Fetch marksheet data
+        const res = await axios.get(`${API}/marksheets/${userIdToFetch}`);
+        const data = res.data.data || res.data;
 
-        // Store data in state
-        setUserData(res.data.data || res.data);
-        setError("");
+        if (data) {
+          navigate('/admin/certificate-card', { state: { marksheet: data } });
+        } else {
+          setError("No marksheet data found for this ID.");
+        }
+
       } catch (err) {
-        setError(err.response?.data?.message || "Failed to fetch user data");
-        setUserData(null);
+        console.error(err);
+        setError(err.response?.data?.message || "Failed to verify ID or fetch marksheet.");
       } finally {
         setLoading(false);
       }
     };
 
     fetchUserData();
-  }, [userId]);
+  }, [userIdToFetch, navigate]);
 
-  // Render based on state
   if (loading) {
-    return <div className="p-4"><p className="text-center">Loading...</p></div>;
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
+        <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+        <p className="text-gray-600 font-medium">Verifying ID...</p>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="p-4"><p className="text-center text-red-600">Error: {error}</p></div>;
-  }
-
-  if (!userData) {
-    return <div className="p-4"><p className="text-center text-gray-500">No user data found</p></div>;
-  }
-
-  // Display user data
-  return (
-    <div className="p-6 max-w-2xl mx-auto">
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-2xl font-bold mb-4">User Information</h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <p className="text-sm text-gray-500">Name</p>
-            <p className="text-lg font-semibold">{userData.name || "N/A"}</p>
-          </div>
-
-          <div>
-            <p className="text-sm text-gray-500">Registration ID</p>
-            <p className="text-lg font-semibold">{userData.registrationId || "N/A"}</p>
-          </div>
-
-          <div>
-            <p className="text-sm text-gray-500">Email</p>
-            <p className="text-lg">{userData.email || "N/A"}</p>
-          </div>
-
-          <div>
-            <p className="text-sm text-gray-500">Mobile No</p>
-            <p className="text-lg">{userData.mobileNo || "N/A"}</p>
-          </div>
-
-          <div>
-            <p className="text-sm text-gray-500">Role</p>
-            <p className="text-lg capitalize">{userData.role || "N/A"}</p>
-          </div>
-
-          <div>
-            <p className="text-sm text-gray-500">Status</p>
-            <p className="text-lg">{userData.status === 1 ? "Active" : "Inactive"}</p>
-          </div>
-        </div>
-
-        {userData.studentProfile && (
-          <div className="mt-6 pt-6 border-t">
-            <h3 className="text-xl font-bold mb-3">Student Profile</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-gray-500">Father's Name</p>
-                <p className="text-lg">{userData.studentProfile.fatherName || "N/A"}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Mother's Name</p>
-                <p className="text-lg">{userData.studentProfile.motherName || "N/A"}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Date of Birth</p>
-                <p className="text-lg">{userData.studentProfile.DOB || "N/A"}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Gender</p>
-                <p className="text-lg capitalize">{userData.studentProfile.gender || "N/A"}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Qualification</p>
-                <p className="text-lg">{userData.studentProfile.qualification || "N/A"}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Address</p>
-                <p className="text-lg">{userData.studentProfile.address || "N/A"}</p>
-              </div>
-            </div>
-          </div>
-        )}
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-6 text-center">
+        <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center text-3xl mb-4">❌</div>
+        <h2 className="text-xl font-bold text-gray-800 mb-2">Verification Failed</h2>
+        <p className="text-red-500 mb-6">{error}</p>
+        <button
+          onClick={() => navigate('/')}
+          className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+        >
+          Go Home
+        </button>
       </div>
-    </div>
-  );
+    );
+  }
+
+  return null; // Should redirect
 }
 
 export default ScanId;

@@ -2,11 +2,13 @@ import React from "react";
 // import QRCode from "react-qr-code";
 import "./Marksheet.css";
 import Qbarcode from "./Qbarcode";
+import QRCode from "react-qr-code";
 
 function CertificateCard({ data }) {
   // Use passed data or fall back to empty defaults safely
   const { student, course, subjects, subjectMarks, totalMarks, totalObtained, grade } = data || {};
 
+  console.log(data);
   const displaySubjects = subjectMarks || subjects || [];
 
   const total = displaySubjects.reduce((a, b) => a + (Number(b.marksObtained) || 0), 0);
@@ -34,7 +36,12 @@ function CertificateCard({ data }) {
               Regis No: <span className="text-red-600">{student?.registrationId || "N/A"}</span>
             </div>
             <div className="w-24 h-24 ml-auto">
-              <Qbarcode />
+              <QRCode
+                value={`https://gola-internet-point.vercel.app/scanid/${data?._id}`}
+                size={90}              // 🔥 SAME AS MARKSHEET
+                bgColor="#ffffff"
+                fgColor="#000000"
+              />
             </div>
           </div>
         </div>
