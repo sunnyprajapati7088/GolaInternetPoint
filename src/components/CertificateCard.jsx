@@ -6,9 +6,9 @@ import QRCode from "react-qr-code";
 
 function CertificateCard({ data }) {
   // Use passed data or fall back to empty defaults safely
-  const { studentId, course, subjects, subjectMarks, totalMarks, totalObtained, grade } = data || {};
+  const { studentId, courseId, subjects, subjectMarks, totalMarks, totalObtained, grade } = data || {};
 
-  console.log( studentId, course, subjects, subjectMarks, totalMarks, totalObtained, grade);
+  console.log(studentId, courseId, subjects, subjectMarks, totalMarks, totalObtained, grade);
   const displaySubjects = subjectMarks || subjects || [];
 
   const total = displaySubjects.reduce((a, b) => a + (Number(b.marksObtained) || 0), 0);
@@ -25,15 +25,15 @@ function CertificateCard({ data }) {
 
   return (
     <div className="marksheet-container bg-white text-black p-4">
-      <div className="marksheet border-4 border-double border-gray-800 p-8 max-w-4xl mx-auto">
+      <div className="marksheet border-4 border-double border-gray-800 p-4 max-w-4xl mx-auto">
 
         {/* HEADER */}
         <div className="header flex justify-between items-center mb-6">
-          <img src="/logoInternetPoint.png" alt="logo" className="logo h-24 w-auto object-contain" />
+          <img src="/logoInternetPoint.png" alt="logo" className="logo h-[151px] w-auto object-contain" />
 
           <div className="qr-boxdata text-right">
-            <div className="qr-reg font-bold mb-2">
-              Regis No: <span className="text-red-600">{studentId?.registrationId || "N/A"}</span>
+            <div className="qr-reg text-xl">
+              Reg. No: <span className="text-red-600">MBD/BIJ/0073759</span>
             </div>
             <div className="w-24 h-24 ml-auto">
               <QRCode
@@ -47,15 +47,18 @@ function CertificateCard({ data }) {
         </div>
 
         {/* CENTER AUTHORITY */}
-        <div className="center-authority text-center mb-8">
-          <h3 className="text-3xl font-bold text-blue-900 mb-1">GCE &amp; SDF</h3>
-          <h4 className="text-xl font-bold mb-2">EDUCATION AND SKILL DEVELOPMENT FOUNDATION</h4>
-          <p className="text-sm">Ministry of Corporate Affairs Govt. of India</p>
-          <p className="text-sm">NITI Aayog & MSME – Govt. of India</p>
-          <p className="reg font-bold mt-1">ISO 9001:2015 & 14001:2015 Certified</p>
-          <p className="address text-sm mt-1">
+        <div className="mt-[-70px] flex flex-col gap-[-10px]">
+          <span className="text-[25px] font-bold   w-[900px] ml-[190px] mb-[-10px]">Authorized Study Center of</span>
+          <span className="text-[44px] font-bold text-[#e65100]   ml-[150px] mb-[-10px]">GOLA COMPUTER </span>
+          <span className="text-[25px] font-bold  text-[#e65100]  w-[900px] ml-[35px]">EDUCATION AND SKILL DEVELOPMENT FOUNDATION</span>
+          <span className="text-[25px] font-bold text-center text-blue-900">An Organization Run & Registered By</span>
+
+          <span className="text-md text-center font-bold">Ministry of Corporate Affairs Govt. of India</span>
+          <span className="text-md text-center font-bold">NITI Aayog & MSME – Govt. of India</span>
+          <h5 className="reg font-bold mt-1 text-center">ISO 9001:2015 & 14001:2015 Certified</h5>
+          <h5 className="address text-md font-bold mt-1 text-center">
             R.S.P. Inter College Road, Seohara (Bijnor)-246746 U.P India
-          </p>
+          </h5>
         </div>
 
         {/* RIBBON */}
@@ -64,7 +67,7 @@ function CertificateCard({ data }) {
         </div>
 
         <h4 className="course-title text-center text-xl font-bold uppercase mb-8 border-b-2 border-gray-300 pb-2 mx-auto max-w-2xl">
-          {course?.name || "Certificate Course"}
+          {courseId?.name || "Certificate Course"}
         </h4>
 
         {/* studentId INFO */}
@@ -73,7 +76,7 @@ function CertificateCard({ data }) {
           <p><b className="min-w-[120px] inline-block">Registration No:</b> {studentId?.registrationId}</p>
           <p><b className="min-w-[120px] inline-block">Father Name:</b> {studentId?.studentProfile?.fatherName || "-"}</p>
           <p><b className="min-w-[120px] inline-block">DOB:</b> {formatDate(studentId?.studentProfile?.dateOfBirth)}</p>
-          <p><b className="min-w-[120px] inline-block">Duration:</b> {course?.duration || "12 Months"}</p>
+          <p><b className="min-w-[120px] inline-block">Duration:</b> {courseId?.duration || "12 Months"}</p>
           <p><b className="min-w-[120px] inline-block">Session:</b> {studentId?.studentProfile?.admissionYear || "2025-2026"}</p>
         </div>
 
@@ -110,13 +113,13 @@ function CertificateCard({ data }) {
         </table>
 
         {/* PERCENTAGE & GRADE */}
-        <div className="flex justify-between items-center px-2 mb-6 font-bold text-sm text-blue-900 uppercase">
+        <div className="flex justify-between items-center mb-2 font-bold text-sm text-blue-900 uppercase">
           <p>PERCENTAGE : <span className="text-black">{((totalObtained / totalMarks) * 100).toFixed(2)}%</span></p>
           <p>GRADE : <span className="text-black">{grade || "A"}</span></p>
         </div>
 
         {/* LEGEND & FOOTER */}
-        <div className="mt-8 px-8">
+        <div className=" ">
           <div className="text-left text-[10px] font-bold text-black mb-1">
             Grade Distinction (above 90%) A+, (89% to 70%) A, (69 to 50%) B, (49% to 45%) C, Failed F
           </div>
@@ -124,18 +127,14 @@ function CertificateCard({ data }) {
             Website-www.golainternet.com
           </div>
 
-          <div className="flex justify-between items-end mt-12 px-8">
-            <div className="text-center">
-              <div className="h-16 mb-2"></div>
-              {/* <p className="border-t border-gray-400 px-8 pt-1 font-bold">Exam Controller</p> */}
+          <div className="flex justify-between items-end px-8 ">
+            <div className="flex gap-4">
+
+              <img src="https://res.cloudinary.com/dfgdj0zcg/image/upload/v1768356535/msme_pohfbu.png" alt="" className="w-[75px] h-[75px]" />
+              <img src="https://res.cloudinary.com/dfgdj0zcg/image/upload/v1768357601/ISO_MarkSheet_yyte0p.png" alt="" className="w-[75px] h-[75px]" />
             </div>
-            <div className="text-center">
-              <div className="relative h-20 w-32 mx-auto mb-2">
-                {/* Placeholder for Stamp/Signature */}
-                <div className="absolute inset-0 border-2 border-blue-900 rounded-full opacity-20 rotate-12"></div>
-              </div>
-              <p className="border-t-2 border-black px-8 pt-1 font-bold">Director</p>
-            </div>
+            <img src="https://res.cloudinary.com/dfgdj0zcg/image/upload/v1768357489/stamp_xldm5g.png" alt="" className="w-[150px]   h-[110px] absolute bottom-4 right-0" />
+
           </div>
         </div>
 

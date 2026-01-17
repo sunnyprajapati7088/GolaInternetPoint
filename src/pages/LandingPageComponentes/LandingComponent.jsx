@@ -91,10 +91,12 @@ const Marquee = () => (
 );
 
 const Header = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
     <>
       {/* Top Contact Bar */}
-      <div className="bg-gray-900 text-gray-300 py-2 text-xs sm:text-sm relative z-50">
+      <div className="bg-gray-900 text-gray-300 py-2 text-xs sm:text-sm relative z-50 transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-2">
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1 hover:text-white transition-colors cursor-pointer">
@@ -115,25 +117,25 @@ const Header = () => {
       {/* Main Navbar */}
       <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-lg border-b border-gray-100 shadow-sm transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
+          <div className="flex items-center justify-between h-16 sm:h-20">
 
             {/* Brand Logo */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="flex items-center gap-4 group cursor-pointer"
+              className="flex items-center gap-3 sm:gap-4 group cursor-pointer"
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             >
               <div className="relative">
                 {/* Logo Highlight Glow */}
                 <div className="absolute -inset-2 bg-gradient-to-r from-orange-400 to-indigo-600 rounded-full blur-md opacity-30 group-hover:opacity-60 transition-opacity duration-500 animate-pulse" />
-                <img src="/logoInternetPoint.png" alt="Gola Logo" className="h-14 w-auto relative z-10 drop-shadow-sm transform group-hover:scale-105 transition-transform duration-300" />
+                <img src="/logoInternetPoint.png" alt="Gola Logo" className="h-10 sm:h-14 w-auto relative z-10 drop-shadow-sm transform group-hover:scale-105 transition-transform duration-300" />
               </div>
               <div className="flex flex-col">
-                <span className="text-2xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-indigo-700 via-purple-700 to-indigo-700 bg-[length:200%_auto] animate-gradient-x">
+                <span className="text-lg sm:text-2xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-indigo-700 via-purple-700 to-indigo-700 bg-[length:200%_auto] animate-gradient-x">
                   Gola Internet Point
                 </span>
-                <span className="text-[11px] font-bold text-gray-500 uppercase tracking-[0.2em] border-l-2 border-orange-500 pl-2 mt-1 group-hover:text-indigo-600 transition-colors">
+                <span className="text-[9px] sm:text-[11px] font-bold text-gray-500 uppercase tracking-[0.2em] border-l-2 border-orange-500 pl-2 mt-0.5 sm:mt-1 group-hover:text-indigo-600 transition-colors">
                   Education & Skills
                 </span>
               </div>
@@ -143,9 +145,9 @@ const Header = () => {
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="flex items-center gap-4"
+              className="hidden sm:flex items-center gap-4"
             >
-              {/* Call Button (Icon on mobile, Text on desktop) */}
+              {/* Call Button */}
               <button
                 onClick={() => window.location.href = 'tel:+917017906951'}
                 className="group flex items-center justify-center w-10 h-10 sm:w-auto sm:h-auto sm:px-4 sm:py-2 rounded-full border border-gray-200 text-gray-600 hover:text-indigo-600 hover:border-indigo-600 hover:bg-indigo-50 transition-all font-medium text-sm"
@@ -158,9 +160,9 @@ const Header = () => {
               {/* Login Link */}
               <Link
                 to="/login"
-                className="hidden sm:block text-gray-600 hover:text-indigo-600 font-semibold text-sm transition-colors"
+                className="text-gray-600 hover:text-indigo-600 font-semibold text-sm transition-colors"
               >
-                Student Login
+                Login
               </Link>
 
               {/* Apply Button */}
@@ -174,8 +176,57 @@ const Header = () => {
                 <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </button>
             </motion.div>
+
+            {/* Mobile Menu Toggle */}
+            <div className="sm:hidden flex items-center">
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="text-gray-600 hover:text-indigo-600 p-2 focus:outline-none"
+              >
+                {isMobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+              </button>
+            </div>
           </div>
         </div>
+
+        {/* Mobile Menu Drawer */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="sm:hidden bg-white border-t border-gray-100 overflow-hidden"
+            >
+              <div className="px-4 pt-4 pb-6 space-y-4 flex flex-col">
+                <a
+                  href="tel:+917017906951"
+                  className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl text-gray-700 font-medium hover:bg-indigo-50 hover:text-indigo-600 transition-all"
+                >
+                  <FaPhoneAlt /> Call: 7017906951
+                </a>
+
+                <Link
+                  to="/login"
+                  className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl text-gray-700 font-medium hover:bg-indigo-50 hover:text-indigo-600 transition-all"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <FaUserGraduate /> Student Login
+                </Link>
+
+                <button
+                  onClick={() => {
+                    document.getElementById('apply').scrollIntoView({ behavior: 'smooth' });
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-3.5 rounded-xl font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2"
+                >
+                  <FaGraduationCap /> Apply for Admission
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
     </>
   );
