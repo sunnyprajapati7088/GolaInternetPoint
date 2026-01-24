@@ -4,31 +4,31 @@ import "./Marksheet.css";
 import Qbarcode from "./Qbarcode";
 import QRCode from "react-qr-code";
 
-function CertificateCard({ }) {
+function CertificateCard({ data}) {
   // Use passed data or fall back to empty defaults safely
 
-  const data = {
-    institute: "  Gola Computer Education Skills Development Foundation ",
-    course: "Advance Diploma in Computer Application",
-    student: {
-      name: "MOHIT KUMAR",
-      regNo: "AICT1440519",
-      fatherName: "JAHENDRA SINGH",
-      dob: "01-Jun-2000",
-      duration: "12 Months",
-      session: "NOV-2024 TO OCT-2025",
-    },
-    subjects: [
-      { code: "ADCA101", name: "Fundamental & Basic Computer", max: 100, marks: 90 },
-      { code: "ADCA102", name: "Windows Operating System", max: 100, marks: 90 },
-      { code: "ADCA103", name: "Microsoft Office", max: 100, marks: 88 },
-      { code: "ADCA104", name: "Adobe Photoshop", max: 100, marks: 89 },
-      { code: "ADCA105", name: "Page Maker & Corel Draw", max: 100, marks: 84 },
-      { code: "ADCA106", name: "Internet & Email", max: 100, marks: 92 },
-      { code: "ADCA107", name: "Tally Prime", max: 100, marks: 81 },
-      { code: "ADCA108", name: "Project", max: 100, marks: 89 },
-    ],
-  };
+  // const data = {
+  //   institute: "  Gola Computer Education Skills Development Foundation ",
+  //   course: "Advance Diploma in Computer Application",
+  //   student: {
+  //     name: "MOHIT KUMAR",
+  //     regNo: "AICT1440519",
+  //     fatherName: "JAHENDRA SINGH",
+  //     dob: "01-Jun-2000",
+  //     duration: "12 Months",
+  //     session: "NOV-2024 TO OCT-2025",
+  //   },
+  //   subjects: [
+  //     { code: "ADCA101", name: "Fundamental & Basic Computer", max: 100, marks: 90 },
+  //     { code: "ADCA102", name: "Windows Operating System", max: 100, marks: 90 },
+  //     { code: "ADCA103", name: "Microsoft Office", max: 100, marks: 88 },
+  //     { code: "ADCA104", name: "Adobe Photoshop", max: 100, marks: 89 },
+  //     { code: "ADCA105", name: "Page Maker & Corel Draw", max: 100, marks: 84 },
+  //     { code: "ADCA106", name: "Internet & Email", max: 100, marks: 92 },
+  //     { code: "ADCA107", name: "Tally Prime", max: 100, marks: 81 },
+  //     { code: "ADCA108", name: "Project", max: 100, marks: 89 },
+  //   ],
+  // };
 
 
 
@@ -56,7 +56,7 @@ function CertificateCard({ }) {
         {/* WATERMARK LAYER (HTML TEXT) */}
         <div className="absolute inset-0 z-0 grid grid-cols-7  content-center justify-items-center pointer-events-none select-none overflow-hidden opacity-50">
           {Array.from({ length: 300 }).map((_, i) => (
-            <span key={i} className=" text-lg whitespace-nowrap text-[#ffffb7]" style={{ fontFamily: 'Arial' }}>
+            <span key={i} className=" text-lg whitespace-nowrap text-[#fcff55]" style={{ fontFamily: 'Arial' }}>
               GCE&SDF
             </span>
           ))}
@@ -87,15 +87,15 @@ function CertificateCard({ }) {
           <span className="text-[44px] font-bold text-[#e65100]   ml-[150px] mb-[-10px]">GOLA COMPUTER </span>
           <span className="text-[25px] font-bold  text-[#e65100]  w-[900px] ml-[10px]">EDUCATION AND SKILL'S DEVELOPMENT FOUNDATION</span>
           <span className="text-[25px] font-bold text-center text-blue-900">An Organization Run & Registered By</span>
-
+          <span className="text-md text-center font-bold">Registrar Firms, Societies and Chits, Government of UP</span>
           <span className="text-md text-center font-bold">Ministry of Corporate Affairs Govt. of India</span>
           <span className="text-md text-center font-bold">NITI Aayog & MSME – Govt. of India</span>
           <h5 className="reg font-bold mt-1 text-center">ISO 9001:2015 & 14001:2015 Certified</h5>
-          <h5 className="address text-md font-bold mt-1 text-center">
-            R.S.P. Inter College Road, Seohara (Bijnor)-246746 U.P India
+         <h5 className="reg font-bold mt-1 text-center text-blue-900 ">
+          Registered Office: Near R.S.P. Inter College Road, Seohara (Bijnor)-246746 U.P India
           </h5>
         </div>
-
+  
         {/* RIBBON */}
         <img src="https://res.cloudinary.com/dfgdj0zcg/image/upload/v1768834916/MarksheetLogos_bonysb.png" className="h-14 w-[280px] ml-[210px] mt-1 mb-2" alt="" />
 
@@ -105,7 +105,7 @@ function CertificateCard({ }) {
 
         {/* studentId INFO */}
         {/* studentId INFO */}
-        <div className="w-full px-12 mb-4">
+        <div className="w-full mb-4">
           <div className="grid grid-cols-2 gap-x-12 gap-y-2 text-sm">
             {/* Left Column */}
             <div className="space-y-2">
@@ -161,7 +161,7 @@ function CertificateCard({ }) {
 
         {/* TABLE */}
         <table className="w-full border-collapse border border-gray-400 mb-1 text-xs [&_th]:!text-xs [&_td]:!text-xs">
-          <thead>
+          <thead className="text-center bg-[#5a7ec9]">
             <tr className="bg-[#5a7ec9] text-black">
               <th className="border border-gray-400 p-2 text-center w-16">SL. NO.</th>
               <th className="border border-gray-400 p-2 text-left">COURSE/SUBJECT/MODULES</th>
@@ -179,10 +179,10 @@ function CertificateCard({ }) {
               </tr>
             ))}
             {/* Total Row */}
-            <tr className="bg-[#5a7ec9] text-black font-bold">
-              <td colSpan="2" className="border border-gray-400 p-2 text-right pr-4 uppercase">Total</td>
-              <td className="border border-gray-400 p-2 text-center">{totalMarks}</td>
-              <td className="border border-gray-400 p-2 text-center">{totalObtained}</td>
+            <tr className="text-black font-bold">
+              <td colSpan="2" className="border border-gray-400 p-2 text-right pr-4 uppercase bg-[#5a7ec9]  ">Total</td>
+              <td className="border border-gray-400 p-2 text-center bg-[#5a7ec9] text-black">{totalMarks}</td>
+              <td className="border border-gray-400 p-2 text-center bg-[#5a7ec9] text-black">{totalObtained}</td>
             </tr>
           </tbody>
         </table>
