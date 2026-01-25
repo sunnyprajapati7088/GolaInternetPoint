@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CertificateCard from '../../components/CertificateCard';
-
+import "../../components/Marksheet.css";
 const CertificateCardPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
@@ -46,7 +46,7 @@ const CertificateCardPage = () => {
             <style>{`
         @media print {
           .no-print { display: none !important; }
-          .print-area { padding: 0; margin: 0; }
+         
           body, html { background: white; }
         }
       `}</style>

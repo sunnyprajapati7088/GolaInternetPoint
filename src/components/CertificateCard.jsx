@@ -4,7 +4,7 @@ import "./Marksheet.css";
 import Qbarcode from "./Qbarcode";
 import QRCode from "react-qr-code";
 
-function CertificateCard({ data}) {
+function CertificateCard({ data }) {
   // Use passed data or fall back to empty defaults safely
 
   // const data = {
@@ -84,18 +84,18 @@ function CertificateCard({ data}) {
         {/* CENTER AUTHORITY */}
         <div className="mt-[-70px] flex flex-col gap-[-10px]">
           <span className="text-[25px] font-bold   w-[900px] ml-[180px] mb-[-10px]">Authorized Study Center of</span>
-          <span className="text-[44px] font-bold text-[#e65100]   ml-[150px] mb-[-10px]">GOLA COMPUTER </span>
-          <span className="text-[25px] font-bold  text-[#e65100]  w-[900px] ml-[10px]">EDUCATION AND SKILL'S DEVELOPMENT FOUNDATION</span>
+          <span className="text-[44px] font-bold text-[#e65100]   ml-[150px] mb-[-10px] font-bahnschrift">GOLA COMPUTER </span>
+          <span className="text-[25px] font-bold  text-[#e65100]  w-[900px] ml-[10px] font-bahnschrift">EDUCATION AND SKILL'S DEVELOPMENT FOUNDATION</span>
           <span className="text-[25px] font-bold text-center text-blue-900">An Organization Run & Registered By</span>
           <span className="text-md text-center font-bold">Registrar Firms, Societies and Chits, Government of UP</span>
           <span className="text-md text-center font-bold">Ministry of Corporate Affairs Govt. of India</span>
           <span className="text-md text-center font-bold">NITI Aayog & MSME – Govt. of India</span>
           <h5 className="reg font-bold mt-1 text-center">ISO 9001:2015 & 14001:2015 Certified</h5>
-         <h5 className="reg font-bold mt-1 text-center text-blue-900 ">
-          Registered Office: Near R.S.P. Inter College Road, Seohara (Bijnor)-246746 U.P India
+          <h5 className="reg font-bold mt-1 text-center text-blue-900 ">
+            Registered Office: Near R.S.P. Inter College Road, Seohara (Bijnor)-246746 U.P India
           </h5>
         </div>
-  
+
         {/* RIBBON */}
         <img src="https://res.cloudinary.com/dfgdj0zcg/image/upload/v1768834916/MarksheetLogos_bonysb.png" className="h-14 w-[280px] ml-[210px] mt-1 mb-2" alt="" />
 
